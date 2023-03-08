@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface MedicationRepository extends JpaRepository<Medication, Long> {
 	
 	Optional<Medication> findByCode(String mdedication);
+	
+	Optional<Medication> findByName(String name);
 }

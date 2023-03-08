@@ -1,11 +1,17 @@
 package com.musala.delivery.drones.mappers;
 
+import org.mapstruct.Mapper;
+import org.springframework.stereotype.Service;
+
 import com.musala.delivery.drones.dto.MedicationDto;
+import com.musala.delivery.drones.dto.MedicationRequestDto;
 import com.musala.delivery.drones.entities.Medication;
 
+@Mapper(componentModel = "spring")
+@Service
 public abstract class MedicationMapper {
 	
-	abstract Medication toEntity(MedicationDto medicationDto);
+	public abstract Medication toEntity(MedicationRequestDto medicationDto);
 	
-	abstract MedicationDto toDto(Medication medication);
+	public abstract MedicationDto toDto(Medication medication);
 }

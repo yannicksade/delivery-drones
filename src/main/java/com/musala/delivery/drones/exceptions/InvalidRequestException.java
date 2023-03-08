@@ -1,5 +1,9 @@
 package com.musala.delivery.drones.exceptions;
 
-@SuppressWarnings("serial")
-public class InvalidRequestException extends RuntimeException {
+
+public class InvalidRequestException extends BusinessException {
+	
+	public InvalidRequestException(String message) {
+		super(message);
+	}
 }

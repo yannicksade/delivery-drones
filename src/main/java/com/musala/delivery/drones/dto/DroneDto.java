@@ -19,4 +19,21 @@ public class DroneDto {
 	private EStatus state;
 
 	private Float weightLimit;
+	
+	public EModel getModel() {
+		return model;
+	}
+	public String getSerialNumber() {
+		return serialNumber;
+	}
+	public Integer getBatteryCapacity() {
+		return batteryCapacity;
+	}
+	public EStatus getState() {
+		return state;
+	}
+	public Float getWeightLimit() {
+		return weightLimit;
+	}
+	
 }

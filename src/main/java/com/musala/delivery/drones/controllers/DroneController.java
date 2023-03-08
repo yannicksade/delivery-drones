@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,34 +22,41 @@ import com.musala.delivery.drones.services.DroneService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1/drone")
+@RequestMapping("drone")
 public class DroneController {
-	
+
 	private final DroneService droneService;
-	
+
 	@Autowired
 	public DroneController(DroneService droneService) {
 		this.droneService = droneService;
 	}
-	
+
 	@GetMapping("details")
-	private ResponseEntity<DroneDto> getDroneDetails(@RequestParam("serialNumber") String serialNumber) {
+	private ResponseEntity<DroneDto> getDroneDetails(@RequestParam("serialNumber") String serialNumber)
+			throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.getDroneBySerialNumber(serialNumber));
 	}
-	
+
 	@GetMapping("all")
 	private ResponseEntity<List<DroneDto>> getDrones() {
 		return ResponseEntity.ok().body(droneService.getAllAvailableDrones());
 	}
-	
+
 	@PostMapping("add")
-    private ResponseEntity<DroneDto> addDrone(@Valid @RequestBody DroneRequestDto request) throws DroneAlreadyRegisteredException, InvalidRequestException {
-        return ResponseEntity.ok().body(droneService.registerDrone(request));
-    }
-	
+	private ResponseEntity<DroneDto> addDrone(@Valid @RequestBody DroneRequestDto request)
+			throws DroneAlreadyRegisteredException, InvalidRequestException {
+		return ResponseEntity.ok().body(droneService.registerDrone(request));
+	}
+
 	@GetMapping("chechBattery")
-	private ResponseEntity<DroneDto> getDroneBatteryLevel(@RequestParam("droneId") long id) throws ResourceNotFoundException {
+	private ResponseEntity<DroneDto> getDroneBatteryLevel(@RequestParam("droneId") long id)
+			throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.checkDroneBatteryLevelById(id));
 	}
-	
+
+	@PutMapping("update")
+	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) {
+		return ResponseEntity.ok().body(droneService.updateDrone(request));
+	}
 }

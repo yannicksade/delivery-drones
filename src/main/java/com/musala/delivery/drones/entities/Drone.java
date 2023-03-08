@@ -2,9 +2,12 @@ package com.musala.delivery.drones.entities;
 
 import com.musala.delivery.drones.enumerations.EModel;
 import com.musala.delivery.drones.enumerations.EStatus;
+
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,12 +34,14 @@ public class Drone {
     private EModel model;
 
     @Column(name = "SERIAL_NUMBER", length = 100)
+    @NotBlank()
     private String serialNumber;
 
     @Column(name = "BATTERY_CAPACITY")
     private Integer batteryCapacity;
 
     @Column(name = "STATE")
+    @Nonnull
     @Enumerated(EnumType.ORDINAL)
     private EStatus state;
 
