@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface NameFieldConstraint {
-    String message () default "Invalid code";
+    String message () default "Invalid field: it must only be composed of letters, numbers, hiphen and/or underscore";
     Class<?> [] groups() default {};
     //Class<? extends Payload> payload();
 }

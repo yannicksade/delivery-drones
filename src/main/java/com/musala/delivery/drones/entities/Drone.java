@@ -5,12 +5,14 @@ import com.musala.delivery.drones.enumerations.EStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
 @Data
+@Builder
 @ToString
 @Entity
 @EqualsAndHashCode
@@ -42,4 +44,10 @@ public class Drone {
     @Min(0)
     @Column(name = "WEIGHT_LIMIT",  precision = 3)
     private Float weightLimit;
+    
+    public Drone(EModel model, String serialNumber) {
+    	this.model = model;
+    	this.serialNumber = serialNumber;
+    	
+    }
 }

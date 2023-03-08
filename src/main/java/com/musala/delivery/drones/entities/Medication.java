@@ -5,6 +5,7 @@ import com.musala.delivery.drones.constraints.NameFieldConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 
 
 @Data
+@Builder
 @Entity
 @EqualsAndHashCode
 @Validated
@@ -41,4 +43,9 @@ public class Medication {
     
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Drone drone; //link loaded medecin to drone
+    
+    public Medication(String name) {
+    	this.name = name;
+    	
+    }
 }

@@ -10,6 +10,6 @@ public abstract class CodeFieldValidator implements ConstraintValidator<CodeFiel
     }
     @Override
     public boolean isValid(String codeField, ConstraintValidatorContext context) {
-        return !codeField.isBlank() && codeField.matches("[A-Z_0-9]+");
+        return !codeField.isBlank() && codeField.matches("^[A-Z0-9_]+$");
     }
 }

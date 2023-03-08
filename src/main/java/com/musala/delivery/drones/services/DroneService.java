@@ -2,6 +2,8 @@ package com.musala.delivery.drones.services;
 
 import java.util.List;
 
+import com.musala.delivery.drones.dto.DroneDto;
+import com.musala.delivery.drones.dto.DroneRequestDto;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;

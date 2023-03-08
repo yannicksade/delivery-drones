@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.musala.delivery.drones.dto.DroneDto;
+import com.musala.delivery.drones.dto.DroneRequestDto;
 import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
-import com.musala.delivery.drones.services.DroneDto;
-import com.musala.delivery.drones.services.DroneRequestDto;
 import com.musala.delivery.drones.services.DroneService;
 
 import jakarta.validation.Valid;

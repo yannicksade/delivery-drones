@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.musala.delivery.drones.services.MedicationDto;
-import com.musala.delivery.drones.services.MedicationRequestDto;
+import com.musala.delivery.drones.dto.MedicationDto;
+import com.musala.delivery.drones.dto.MedicationRequestDto;
 import com.musala.delivery.drones.services.MedicationService;
 
 import jakarta.validation.Valid;

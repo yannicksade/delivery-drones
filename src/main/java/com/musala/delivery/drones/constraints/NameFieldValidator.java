@@ -11,6 +11,6 @@ public abstract class NameFieldValidator implements ConstraintValidator<NameFiel
     }
     @Override
     public boolean isValid(String nameField, ConstraintValidatorContext context) {
-        return !nameField.isBlank() && nameField.matches("[aA-Zz\\-_0-9]+");
+        return !nameField.isBlank() && nameField.matches("^[A-Za-z0-9-_]+$");
     }
 }

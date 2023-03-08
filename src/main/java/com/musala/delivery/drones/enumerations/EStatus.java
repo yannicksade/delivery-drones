@@ -1,35 +1,24 @@
 package com.musala.delivery.drones.enumerations;
 
-import lombok.Data;
-
-@Data
 public enum EStatus {
-    IDLE(0), LOADING(1), LOADED(2),
-    DELIVERING(3), DELIVERED(4), RETURNING(5);
+	IDLE(0), LOADING(1), LOADED(2), DELIVERING(3), DELIVERED(4), RETURNING(5);
 
-    int code;
+	int code;
 
-    EStatus(int code) {
-        this.code = code;
-    }
+	EStatus(int code) {
+		this.code = code;
+	}
 
-    @Override
-    public String toString() {
-        switch (this) {
-            case IDLE:
-                return "IDLE";
-            case LOADING:
-                return "LOADING";
-            case LOADED:
-                return "LOADED";
-            case DELIVERING:
-                return "DELIVERING";
-            case DELIVERED:
-                return "DELIVERED";
-            case RETURNING:
-                return "RETURNING";
-            default:
-                throw new IllegalStateException("Invalid state");
-        }
-    }
+	@Override
+	public String toString() {
+		return switch (this) {
+		case IDLE -> "IDLE";
+		case LOADING -> "LOADING";
+		case LOADED -> "LOADED";
+		case DELIVERING -> "DELIVERING";
+		case DELIVERED -> "DELIVERED";
+		case RETURNING -> "RETURNING";
+		default -> throw new IllegalStateException("Invalid state");
+		};
+	}
 }

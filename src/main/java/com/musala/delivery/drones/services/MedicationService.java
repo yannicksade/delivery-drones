@@ -2,6 +2,8 @@ package com.musala.delivery.drones.services;
 
 import java.util.List;
 
+import com.musala.delivery.drones.dto.MedicationDto;
+import com.musala.delivery.drones.dto.MedicationRequestDto;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;

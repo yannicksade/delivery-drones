@@ -1,16 +1,24 @@
 package com.musala.delivery.drones.services.Implements;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatcher;
+import org.springframework.data.domain.ExampleMatcher.MatcherConfigurer;
+import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
 import org.springframework.stereotype.Service;
 
+import com.musala.delivery.drones.dto.MedicationDto;
+import com.musala.delivery.drones.dto.MedicationRequestDto;
+import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.repositories.MedicationRepository;
-import com.musala.delivery.drones.services.MedicationDto;
-import com.musala.delivery.drones.services.MedicationRequestDto;
 import com.musala.delivery.drones.services.MedicationService;
 
 @Service
@@ -25,21 +33,42 @@ public class MedicationServiceImpl implements MedicationService {
 	
 	@Override
 	public List<MedicationDto> getAllMedicationsByDrone(long droneId) {
-		// TODO Auto-generated method stub
-		return null;
+		return medicationRepository.findAll().stream().map(this::toMedicationDto).collect(Collectors.toList());
+	}
+	private MedicationDto toMedicationDto(Medication data) {
+		return Medication.builder()
+				.code(data.getCode())
+				.name(data.getName())
+				.weight(data.getWeight())
+				.image(data.getImage())
+				.droneId(data.getDrone().getId()).build();
 	}
 
+	private Medication toMedication(MedicationDto data) {
+		return MedicationDto.builder()
+				.code(data.getCode())
+				.name(data.getName())
+				.weight(data.getWeight())
+				.image(data.getImage())
+				.drone(medicationRepository.findById(medicationRepository.findById(data.getDroneId())
+						.get().orElse(null))).build();
+	}
+	
 	@Override
 	public MedicationDto createMedication(MedicationRequestDto request)
 			throws InvalidRequestException, MedicationAlreadyRegisteredException {
-		// TODO Auto-generated method stub
-		return null;
+		ExampleMatcher exmMatcher = ExampleMatcher.matching();
+		exmMatcher.withIgnorePaths("id").withMatcher("name", GenericPropertyMatcher.of(null));
+		Example<Medication> example = Example.of(new Medication(request.getName()));
+		if(medicationRepository.exists(example)) throw new MedicationAlreadyRegisteredException();
+		return toMedicationDto(medicationRepository.save(toMedication(request)));
 	}
 
 	@Override
 	public MedicationDto getDroneByCode(String code) throws ResourceNotFoundException {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Medication> medication = medicationRepository.findByCode(code);
+				if(medication.isPresent()) return toMedicationDto(medication.get());
+				 throw new ResourceNotFoundException();
 	}
 
 	@Override

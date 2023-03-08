@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD,ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CodeFieldConstraint {
-    String message () default "Invalid code";
+    String message () default "Invalid field: it must only be composed of UPPERCASE letters, underscores and numbers";
     Class<?> [] groups() default {};
     //Class<? extends Payload> payload();
 }

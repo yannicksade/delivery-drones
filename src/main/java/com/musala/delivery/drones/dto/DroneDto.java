@@ -1,18 +1,14 @@
-package com.musala.delivery.drones.services;
-
-import java.io.Serializable;
+package com.musala.delivery.drones.dto;
 
 import com.musala.delivery.drones.enumerations.EModel;
 import com.musala.delivery.drones.enumerations.EStatus;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class DroneDto implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+@Builder
+public class DroneDto {
 
 	private EModel model;
 	

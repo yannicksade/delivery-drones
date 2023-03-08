@@ -24,4 +24,6 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
 	@Modifying
 	@Query("UPDATE drone dn SET dn.state = :state where dn.id = :id")
 	void saveDroneState(long id, EStatus state);
+
+	//boolean exists(Example<Medication> example);
 }
