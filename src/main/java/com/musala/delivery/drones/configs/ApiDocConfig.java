@@ -8,7 +8,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 @Configurable
-
+@OpenAPIDefinition
 public class ApiDocConfig {
 
 	@Bean

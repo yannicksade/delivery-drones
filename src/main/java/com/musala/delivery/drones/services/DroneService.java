@@ -13,7 +13,7 @@ public interface DroneService {
 	
 	DroneDto registerDrone(DroneRequestDto droneRequest) throws InvalidRequestException, DroneAlreadyRegisteredException;
 	
-	DroneDto getDroneById(long id) throws ResourceNotFoundException;
+	DroneDto getDroneBySerialNumber(String serialNumber) throws ResourceNotFoundException;
 	
 	DroneDto validateDrone(DroneRequestDto request) throws InvalidRequestException;
 	
