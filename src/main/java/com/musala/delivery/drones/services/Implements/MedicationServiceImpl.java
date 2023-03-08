@@ -2,6 +2,8 @@ package com.musala.delivery.drones.services.Implements;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
@@ -9,6 +11,7 @@ import com.musala.delivery.drones.services.MedicationDto;
 import com.musala.delivery.drones.services.MedicationRequestDto;
 import com.musala.delivery.drones.services.MedicationService;
 
+@Service
 public class MedicationServiceImpl implements MedicationService {
 
 	@Override

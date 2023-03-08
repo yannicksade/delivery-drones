@@ -10,9 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Data
 @ToString
 @Entity
@@ -45,7 +42,4 @@ public class Drone {
     @Min(0)
     @Column(name = "WEIGHT_LIMIT",  precision = 3)
     private Float weightLimit;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private Set<Medication> medications = new HashSet<>();
 }

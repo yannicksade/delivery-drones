@@ -3,7 +3,6 @@ package com.musala.delivery.drones.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import org.springframework.validation.annotation.Validated;
 
 
@@ -37,4 +38,7 @@ public class Medication {
 
     @Column(name = "IMAGE_FILENAME")
     private String image;
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Drone drone; //link loaded medecin to drone
 }

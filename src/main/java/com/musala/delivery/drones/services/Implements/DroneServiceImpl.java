@@ -2,6 +2,8 @@ package com.musala.delivery.drones.services.Implements;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
@@ -10,7 +12,8 @@ import com.musala.delivery.drones.services.DroneDto;
 import com.musala.delivery.drones.services.DroneRequestDto;
 import com.musala.delivery.drones.services.DroneService;
 
-public class DroneServiceImpl implements DroneService{
+@Service
+public class DroneServiceImpl implements DroneService {
 
 	@Override
 	public List<DroneDto> getAllAvailableDrones() {
