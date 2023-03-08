@@ -1,4 +1,4 @@
 package com.musala.delivery.drones.services;
 
-public class ResponseDto {
+public class MedicationResponseDto {
 }

@@ -1,4 +1,5 @@
 package com.musala.delivery.drones.services;
 
-public interface IMedication {
+public class DroneRequestDto {
+
 }
