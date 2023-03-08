@@ -2,11 +2,13 @@ package com.musala.delivery.drones.services.Implements;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.repositories.MedicationRepository;
 import com.musala.delivery.drones.services.MedicationDto;
 import com.musala.delivery.drones.services.MedicationRequestDto;
 import com.musala.delivery.drones.services.MedicationService;
@@ -14,6 +16,13 @@ import com.musala.delivery.drones.services.MedicationService;
 @Service
 public class MedicationServiceImpl implements MedicationService {
 
+	private final MedicationRepository medicationRepository;
+	
+	@Autowired
+	MedicationServiceImpl(MedicationRepository medicationRepository) {
+		this.medicationRepository = medicationRepository;
+	}
+	
 	@Override
 	public List<MedicationDto> getAllMedicationsByDrone(long droneId) {
 		// TODO Auto-generated method stub
