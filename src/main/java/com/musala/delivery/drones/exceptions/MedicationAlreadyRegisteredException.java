@@ -1,5 +1,6 @@
 package com.musala.delivery.drones.exceptions;
 
 @SuppressWarnings("serial")
-public class InvalidDataException extends RuntimeException {
+public class MedicationAlreadyRegisteredException extends RuntimeException{
+
 }

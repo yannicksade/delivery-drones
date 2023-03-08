@@ -1,6 +1,6 @@
 package com.musala.delivery.drones.exceptions.handler;
 
-import com.musala.delivery.drones.exceptions.InvalidDataException;
+import com.musala.delivery.drones.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.MedicationRequestDto;
 import org.springframework.ui.Model;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class DronesExceptionHandler {
 
-    @ExceptionHandler(InvalidDataException.class)
-    public MedicationRequestDto handleInvalidDataException(Model model, InvalidDataException invalidDataException) {
+    @ExceptionHandler(InvalidRequestException.class)
+    public MedicationRequestDto handleInvalidDataException(Model model, InvalidRequestException invalidDataException) {
         return null;
     }
 
