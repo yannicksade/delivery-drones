@@ -62,6 +62,7 @@ public class MedicationServiceImpl implements MedicationService {
 					.weight(medicationDto.getWeight())
 					.image(medicationDto.getImage())
 					.drone(medicationRepository.findById(medicationDto.getDroneId()).orElse(null))
+					.build();
 				));
 	}
 
