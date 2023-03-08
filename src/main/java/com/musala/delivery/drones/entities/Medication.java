@@ -32,7 +32,7 @@ public class Medication {
 
     @Max(500)
     @Min(0)
-    @Column(name = "WEIGHT",  precision = 3, scale = 2)
+    @Column(name = "WEIGHT",  precision = 3)
     private Float weight;
 
     @Column(name = "IMAGE_FILENAME")

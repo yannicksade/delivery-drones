@@ -43,7 +43,7 @@ public class Drone {
 
     @Max(500)
     @Min(0)
-    @Column(name = "WEIGHT_LIMIT",  precision = 3, scale = 2)
+    @Column(name = "WEIGHT_LIMIT",  precision = 3)
     private Float weightLimit;
 
     @OneToMany(fetch = FetchType.LAZY)
