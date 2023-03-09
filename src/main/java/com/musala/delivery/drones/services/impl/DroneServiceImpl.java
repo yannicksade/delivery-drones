@@ -43,6 +43,11 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    public List<Drone> findAllDrones() {
+        return droneRepository.findAll();
+    }
+
+    @Override
     public DroneDto registerDrone(DroneRequestDto request)
             throws InvalidRequestException, DroneAlreadyRegisteredException {
         Optional<Drone> drone = droneRepository.findByModelAndSerialNumber(request.getModel(),
@@ -54,7 +59,7 @@ public class DroneServiceImpl implements DroneService {
         log.info("A drone with  serial number {} and model {} is saving ", request.getSerialNumber(), request.getModel());
         return droneMapper.toDto(droneRepository.save(
                 Drone.builder()
-                        .batteryCapacity(100)
+                        .batteryLevel(100)
                         .state(droneDto.getState())
                         .model(droneDto.getModel())
                         .weightLimit(droneDto.getWeightLimit())
@@ -110,9 +115,9 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public DroneDto checkDroneBatteryLevelById(long id) throws ResourceNotFoundException {
-        return droneMapper.toDto(droneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No drone found with the ID number" + id)));
+    public float checkDroneBatteryLevelById(long id) throws ResourceNotFoundException {
+        return droneRepository.findById(id).map(Drone::getBatteryLevel)
+                .orElseThrow(() -> new ResourceNotFoundException("No drone found with the ID number" + id));
     }
 
     @Override

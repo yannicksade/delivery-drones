@@ -45,7 +45,7 @@ public class DroneController {
 	}
 
 	@GetMapping("checkBattery")
-	private ResponseEntity<DroneDto> getDroneBatteryLevel(@RequestParam("droneId") long id)
+	private ResponseEntity<Float> getDroneBatteryLevel(@RequestParam("droneId") long id)
 			throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.checkDroneBatteryLevelById(id));
 	}

@@ -1,6 +1,7 @@
 package com.musala.delivery.drones.constraints;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
@@ -11,5 +12,5 @@ import java.lang.annotation.*;
 public @interface NameFieldConstraint {
     String message () default "Invalid field: it must only be composed of letters, numbers, hiphen and/or underscore";
     Class<?> [] groups() default {};
-    //Class<? extends Payload> payload();
+    Class<? extends Payload>[] payload() default {};
 }

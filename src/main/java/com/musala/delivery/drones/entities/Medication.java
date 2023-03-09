@@ -25,11 +25,11 @@ public class Medication {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SeqMedication")
     private Long id;
 
-    @CodeFieldConstraint
+    @CodeFieldConstraint(message = "Code must only have UPPERCASE letters, underscores and numbers")
     @Column(name = "CODE")
     private String code;
 
-    @NameFieldConstraint
+    @NameFieldConstraint(message = "Name must only have letters, numbers, hiphen and/or underscore")
     @Column(name = "NAME")
     private String name;
 

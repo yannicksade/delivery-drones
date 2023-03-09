@@ -1,6 +1,7 @@
 package com.musala.delivery.drones.constraints;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
 
@@ -11,5 +12,5 @@ import java.lang.annotation.*;
 public @interface CodeFieldConstraint {
     String message () default "Invalid field: it must only be composed of UPPERCASE letters, underscores and numbers";
     Class<?> [] groups() default {};
-    //Class<? extends Payload> payload();
+    Class<? extends Payload>[] payload() default {};
 }

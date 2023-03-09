@@ -40,7 +40,7 @@ public class Drone {
     private String serialNumber;
 
     @Column(name = "BATTERY_CAPACITY")
-    private Integer batteryCapacity;
+    private Integer batteryLevel;
 
     @Column(name = "STATE")
     @Nonnull

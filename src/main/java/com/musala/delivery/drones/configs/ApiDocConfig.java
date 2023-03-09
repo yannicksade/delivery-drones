@@ -1,13 +1,12 @@
 package com.musala.delivery.drones.configs;
 
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
-
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springframework.context.annotation.Configuration;
 
-@Configurable
+@Configuration
 @OpenAPIDefinition
 public class ApiDocConfig {
 

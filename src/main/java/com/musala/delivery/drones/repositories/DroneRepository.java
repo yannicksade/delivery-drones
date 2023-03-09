@@ -25,7 +25,7 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
 	
 	@Transactional
 	@Modifying
-	@Query("UPDATE drone dn SET dn.state = :state where dn.id = :id")
+	@Query("UPDATE Drone dn SET dn.state = :state where dn.id = :id")
 	void updateDroneState(long id, EStatus state);
 
 	//boolean exists(Example<Medication> example);

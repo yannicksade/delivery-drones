@@ -6,7 +6,7 @@ spring:
   security:
     user:
       name: root
-      password: 
+      password: root
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:testdb
@@ -23,7 +23,8 @@ spring:
 springdoc:
   swagger-ui:
     enabled: true
-    path: swagger-ui.html
+    path: /doc
+
   api-docs:
     enabled: true
  #spring:

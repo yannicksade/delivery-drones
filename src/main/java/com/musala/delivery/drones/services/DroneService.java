@@ -13,14 +13,14 @@ import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 public interface DroneService {
 
     List<DroneDto> getAllAvailableDrones();
-
+    List<Drone> findAllDrones();
     DroneDto registerDrone(DroneRequestDto droneRequest) throws InvalidRequestException, DroneAlreadyRegisteredException;
 
     DroneDto getDroneBySerialNumber(String serialNumber) throws ResourceNotFoundException;
 
     DroneDto validateDrone(DroneRequestDto droneRequest) throws InvalidRequestException;
 
-    DroneDto checkDroneBatteryLevelById(long id) throws ResourceNotFoundException;
+    float checkDroneBatteryLevelById(long id) throws ResourceNotFoundException;
 
     void updateDroneStateById(long id, EStatus state);
 
