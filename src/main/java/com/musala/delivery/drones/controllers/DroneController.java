@@ -2,15 +2,10 @@ package com.musala.delivery.drones.controllers;
 
 import java.util.List;
 
+import com.musala.delivery.drones.dto.LoadRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.musala.delivery.drones.dto.DroneDto;
 import com.musala.delivery.drones.dto.DroneRequestDto;
@@ -58,5 +53,9 @@ public class DroneController {
 	@PutMapping("update")
 	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) {
 		return ResponseEntity.ok().body(droneService.updateDrone(request));
+	}
+	@PostMapping("load/{id}")
+	private ResponseEntity<Integer> update(@Valid @PathVariable("droneId") Long id, @RequestBody LoadRequestDto request) throws ResourceNotFoundException {
+		return ResponseEntity.ok().body(droneService.loadDrone(id, request));
 	}
 }

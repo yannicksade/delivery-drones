@@ -20,7 +20,12 @@ spring:
   h2:
     console:
       enabled: true
-      
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: swagger-ui.html
+  api-docs:
+    enabled: true
  #spring:
   #datasource:
    # hikari:

@@ -14,28 +14,5 @@ public class MedicationDto {
 	private float weight;
 
 	private String image;
-
-	private Long droneId;
-
-	public String getCode() {
-		return code;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public float getWeight() {
-		return weight;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public Long getDroneId() {
-		return droneId;
-	}
-	
 	
 }

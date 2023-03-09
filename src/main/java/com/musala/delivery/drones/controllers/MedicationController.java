@@ -4,16 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.musala.delivery.drones.dto.DroneDto;
-import com.musala.delivery.drones.dto.DroneRequestDto;
 import com.musala.delivery.drones.dto.MedicationDto;
 import com.musala.delivery.drones.dto.MedicationRequestDto;
 import com.musala.delivery.drones.exceptions.InvalidRequestException;
@@ -41,9 +33,9 @@ public class MedicationController {
 		return ResponseEntity.ok().body(medicationService.getDroneByCode(code));
 	}
 	
-	@GetMapping("allMedicationsByDrone")
-	private ResponseEntity<List<MedicationDto>> getDroneMedications(@RequestParam("droneRequestDto") MedicationRequestDto request) {
-		return ResponseEntity.ok().body(medicationService.getAllMedicationsByDrone(request.getDroneId()));
+	@GetMapping("allMedicationsByDrone/{droneId}")
+	private ResponseEntity<List<MedicationDto>> getDroneMedications(@PathVariable("droneId") Long droneId) {
+		return ResponseEntity.ok().body(medicationService.getAllMedicationsByDrone(droneId));
 	}
 	
 	@PostMapping("create")
@@ -53,7 +45,7 @@ public class MedicationController {
 	
 	@PutMapping("update")
 	private ResponseEntity<MedicationDto> update(@Valid @RequestBody MedicationRequestDto request) {
-		return ResponseEntity.ok().body(medicationService.updateOrloadMedication(request));
+		return ResponseEntity.ok().body(medicationService.updateMedication(request));
 	}
 }
 

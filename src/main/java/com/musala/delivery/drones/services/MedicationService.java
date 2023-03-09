@@ -17,5 +17,5 @@ public interface MedicationService {
 	
 	MedicationDto validateMedication(MedicationRequestDto request) throws InvalidRequestException;
 	
-	MedicationDto updateOrloadMedication(MedicationRequestDto request);
+	MedicationDto updateMedication(MedicationRequestDto request);
 }

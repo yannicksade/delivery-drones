@@ -5,15 +5,15 @@ import com.musala.delivery.drones.constraints.NameFieldConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import org.springframework.validation.annotation.Validated;
 
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @EqualsAndHashCode
 @Validated
@@ -41,8 +41,8 @@ public class Medication {
     @Column(name = "IMAGE_FILENAME")
     private String image;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Drone drone; //link loaded medecin to drone
+    /*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Drone drone; //link loaded medecin to drone*/
     
     public Medication(String name) {
     	this.name = name;

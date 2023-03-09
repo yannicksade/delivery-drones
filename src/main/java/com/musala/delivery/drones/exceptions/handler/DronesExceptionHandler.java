@@ -26,7 +26,8 @@ public class DronesExceptionHandler {
     				.errorCode(HttpStatus.BAD_REQUEST)
     				.date(LocalDateTime.now())
     				.description("Invalid request data")
-    				.messager(ex.getMessage())
+    				.message(ex.getMessage())
+						.build()
     			);
     }
 
@@ -37,7 +38,8 @@ public class DronesExceptionHandler {
     				.errorCode(HttpStatus.ALREADY_REPORTED)
     				.date(LocalDateTime.now())
     				.description("Similar Drone exists already")
-    				.messager(ex.getMessage())
+    				.message(ex.getMessage())
+						.build()
     			);
     }
     @ExceptionHandler(MedicationAlreadyRegisteredException.class)
@@ -47,7 +49,8 @@ public class DronesExceptionHandler {
     				.errorCode(HttpStatus.ALREADY_REPORTED)
     				.date(LocalDateTime.now())
     				.description("Similar Medication exists already")
-    				.messager(ex.getMessage())
+    				.message(ex.getMessage())
+						.build()
     			);
     }
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -57,7 +60,8 @@ public class DronesExceptionHandler {
     				.errorCode(HttpStatus.NOT_FOUND)
     				.date(LocalDateTime.now())
     				.description("No Data found")
-    				.messager(ex.getMessage())
+    				.message(ex.getMessage())
+						.build()
     			);
     }
     @ExceptionHandler(LowBatteryException.class)
@@ -67,7 +71,8 @@ public class DronesExceptionHandler {
     				.errorCode(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED)
     				.date(LocalDateTime.now())
     				.description("Low Battery")
-    				.messager(ex.getMessage())
+    				.message(ex.getMessage())
+						.build()
     			);
     }
     @ExceptionHandler(DroneOverloadException.class)
@@ -77,7 +82,8 @@ public class DronesExceptionHandler {
     				.errorCode(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED)
     				.date(LocalDateTime.now())
     				.description("Drone Capacity exceeded")
-    				.messager(ex.getMessage())
+    				.message(ex.getMessage())
+						.build()
     			);
     }
     

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,17 +30,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MedicationServiceImpl implements MedicationService {
 
 	private final MedicationRepository medicationRepository;
 
 	private final MedicationMapper medicationMapper;
-
-	@Autowired
-	MedicationServiceImpl(MedicationRepository medicationRepository, MedicationMapper medicationMapper) {
-		this.medicationRepository = medicationRepository;
-		this.medicationMapper = medicationMapper;
-	}
 
 	@Override
 	public List<MedicationDto> getAllMedicationsByDrone(long droneId) {
@@ -61,13 +57,12 @@ public class MedicationServiceImpl implements MedicationService {
 					.name(medicationDto.getName())
 					.weight(medicationDto.getWeight())
 					.image(medicationDto.getImage())
-					.drone(medicationRepository.findById(medicationDto.getDroneId()).orElse(null))
-					.build();
+					.build()
 				));
 	}
 
 	@Override
-	public MedicationDto updateOrloadMedication(MedicationRequestDto request) {
+	public MedicationDto updateMedication(MedicationRequestDto request) {
 		return medicationMapper.toDto(medicationRepository.save(medicationMapper.toEntity(request)));
 		
 	}

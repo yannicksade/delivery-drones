@@ -8,15 +8,17 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @EqualsAndHashCode
 @Validated
@@ -49,7 +51,10 @@ public class Drone {
     @Min(0)
     @Column(name = "WEIGHT_LIMIT",  precision = 3)
     private Float weightLimit;
-    
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Set<Medication> medications = new HashSet<>();
+
     public Drone(EModel model, String serialNumber) {
     	this.model = model;
     	this.serialNumber = serialNumber;
