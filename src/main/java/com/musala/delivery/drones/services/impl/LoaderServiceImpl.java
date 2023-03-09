@@ -35,12 +35,12 @@ public class LoaderServiceImpl implements LoaderService {
         return saveLoads(drone, loadRequest);
     }
 
-    private Integer saveLoads(Drone drone, LoadRequestDto loadRequestDto) throws DroneAlreadyBusyException, DroneOverloadException, LowBatteryException, InvalidRequestException  {
+    private Integer saveLoads(Drone drone, LoadRequestDto loadRequestDto) throws DroneAlreadyBusyException, DroneOverloadException, LowBatteryException, InvalidRequestException {
         LoadRequest load = loadMapper.toLoad(loadRequestDto);
         if (!drone.getState().equals(EStatus.IDLE)) {
             throw new DroneAlreadyBusyException("Done is already busy");
         }
-        if(drone.getBatteryLevel() < 25) {
+        if (drone.getBatteryLevel() < 25) {
             throw new LowBatteryException("Done is already busy");
         }
         double weight = 0.0d;
@@ -63,10 +63,12 @@ public class LoaderServiceImpl implements LoaderService {
         validateHistoryActivityData(loadRequestDto);
         drone.getMedications().forEach(medication -> saveActivityHistory(drone, medication, loadRequestDto));
         drone.setState(EStatus.LOADING);
+        log.info("A drone with ID {} is in LOADING state", drone.getId());
         return droneService.save(drone).getMedications().size();
     }
-    private void saveActivityHistory(Drone drone,Medication medication, HistoryRequestDto loadRequestDto) throws InvalidRequestException {
-        activityHistoryService.createHistory(
+
+    private void saveActivityHistory(Drone drone, Medication medication, HistoryRequestDto loadRequestDto) throws InvalidRequestException {
+        ActivityHistory history = activityHistoryService.createHistory(
                 ActivityHistory.builder()
                         .historyState(EStatus.DELIVERING)
                         .drone(drone)
@@ -76,12 +78,14 @@ public class LoaderServiceImpl implements LoaderService {
                         .startedAt(LocalDateTime.now())
                         .build()
         );
+        log.info("An activity History with ID {} is created for medication identified by {} in DELIVERING state", history.getId(), medication.getId());
     }
+
     private void validateHistoryActivityData(LoadRequestDto loadRequestDto) {
-        if(loadRequestDto.getOriginLocation().isBlank()) {
+        if (loadRequestDto.getOriginLocation().isBlank()) {
             throw new InvalidRequestException("Origin is Required");
         }
-        if(loadRequestDto.getDestinationLocation().isBlank()) {
+        if (loadRequestDto.getDestinationLocation().isBlank()) {
             throw new InvalidRequestException("Destination is Required");
         }
     }

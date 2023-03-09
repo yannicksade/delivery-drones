@@ -17,5 +17,5 @@ public interface ActivityHistoryService {
 
     void updateActivityState(long id, EStatus status);
 
-    void createHistory(ActivityHistory activityHistory);
+    ActivityHistory createHistory(ActivityHistory activityHistory);
 }
