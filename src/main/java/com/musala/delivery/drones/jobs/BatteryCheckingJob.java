@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DroneBatteryChecking {
+public class BatteryCheckingJob {
     private final DroneService droneService;
     @Scheduled(cron = "0 */1 * ? * *")
     public void checkDroneBattery() {

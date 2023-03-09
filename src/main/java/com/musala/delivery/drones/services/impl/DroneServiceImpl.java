@@ -34,6 +34,11 @@ public class DroneServiceImpl implements DroneService {
     private final LoadMapper loadMapper;
 
     @Override
+    public Optional<Drone> findById(long id) {
+        return droneRepository.findById(id);
+    }
+
+    @Override
     public List<DroneDto> getAllAvailableDrones() {
         return droneRepository.findByState(EStatus.IDLE).stream().map(droneMapper::toDto).collect(Collectors.toList());
     }
@@ -108,6 +113,16 @@ public class DroneServiceImpl implements DroneService {
     public DroneDto updateDrone(DroneRequestDto request) {
         validateDrone(request);
         return droneMapper.toDto(droneRepository.save(droneMapper.toEntity(request)));
+    }
+
+    @Override
+    public Drone save(Drone drone) {
+        return droneRepository.save(drone);
+    }
+
+    @Override
+    public List<Drone> getWorkingDrones() {
+        return droneRepository.findWorkingDrones(EStatus.IDLE);
     }
 
     @Override

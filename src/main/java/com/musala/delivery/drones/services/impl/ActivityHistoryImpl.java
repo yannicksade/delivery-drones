@@ -5,6 +5,7 @@ import com.musala.delivery.drones.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.entities.Medication;
+import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.mappers.HistoryMapper;
 import com.musala.delivery.drones.repositories.ActivityHistoryRepository;
 import com.musala.delivery.drones.services.ActivityHistoryService;
@@ -29,6 +30,8 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
 
     private final HistoryMapper historyMapper;
 
+    private final ActivityHistoryRepository historyRepository;
+
     @PersistenceContext
     private final EntityManager entityManager;
 
@@ -47,6 +50,16 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
     public List<HistoryDto> getHistoriesByMedication(long medicationID, HistoryRequestDto requestDto) {
         return  entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateActivityState(long id, EStatus state) {
+        historyRepository.updateState(id, state);
+    }
+
+    @Override
+    public void createHistory(ActivityHistory activityHistory) {
+        historyRepository.save(activityHistory);
     }
 
     private CriteriaQuery<ActivityHistory> getCriteria(HistoryRequestDto requestDto, String field, long id) {

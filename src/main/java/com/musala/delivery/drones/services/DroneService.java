@@ -30,4 +30,6 @@ public interface DroneService {
     DroneDto updateDrone(DroneRequestDto droneRequest);
 
     Drone save(Drone drone);
+
+    List<Drone> getWorkingDrones();
 }

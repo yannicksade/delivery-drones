@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class LoadRequestDto {
+public class LoadRequestDto extends HistoryRequestDto {
 	private Long medicationId;
 	private List<Long> medicationIds;
 }

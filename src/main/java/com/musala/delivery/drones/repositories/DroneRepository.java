@@ -6,6 +6,7 @@ import com.musala.delivery.drones.enumerations.EStatus;
 
 import jakarta.transaction.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -28,5 +29,7 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
 	@Query("UPDATE Drone dn SET dn.state = :state where dn.id = :id")
 	void updateDroneState(long id, EStatus state);
 
-	//boolean exists(Example<Medication> example);
+	@Query("FROM Drone dn WHERE dn.state <> :state")
+    List<Drone> findWorkingDrones(EStatus state);
+
 }
