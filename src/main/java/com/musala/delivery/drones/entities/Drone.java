@@ -11,7 +11,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -55,9 +57,8 @@ public class Drone {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<Medication> medications = new HashSet<>();
 
-    public Drone(EModel model, String serialNumber) {
-    	this.model = model;
-    	this.serialNumber = serialNumber;
-    	
-    }
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DRONE_ID")
+    private List<ActivityHistory> histories = new ArrayList<>();
+
 }

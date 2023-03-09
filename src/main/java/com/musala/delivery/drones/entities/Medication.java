@@ -9,6 +9,9 @@ import lombok.*;
 
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @Builder
@@ -40,10 +43,11 @@ public class Medication {
 
     @Column(name = "IMAGE_FILENAME")
     private String image;
-    
-    /*@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Drone drone; //link loaded medecin to drone*/
-    
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEDICATION_ID")
+    private List<ActivityHistory> histories = new ArrayList<>();
+
     public Medication(String name) {
     	this.name = name;
     	
