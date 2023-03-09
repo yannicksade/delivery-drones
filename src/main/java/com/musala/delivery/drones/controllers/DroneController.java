@@ -44,7 +44,7 @@ public class DroneController {
 		return ResponseEntity.ok().body(droneService.registerDrone(request));
 	}
 
-	@GetMapping("chechBattery")
+	@GetMapping("checkBattery")
 	private ResponseEntity<DroneDto> getDroneBatteryLevel(@RequestParam("droneId") long id)
 			throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.checkDroneBatteryLevelById(id));
@@ -54,8 +54,8 @@ public class DroneController {
 	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) {
 		return ResponseEntity.ok().body(droneService.updateDrone(request));
 	}
-	@PostMapping("load/{id}")
-	private ResponseEntity<Integer> update(@Valid @PathVariable("droneId") Long id, @RequestBody LoadRequestDto request) throws ResourceNotFoundException {
+	@PostMapping("load/{droneId}")
+	private ResponseEntity<Integer> loadDrone(@Valid @PathVariable("droneId") Long id, @RequestBody LoadRequestDto request) throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.loadDrone(id, request));
 	}
 }
