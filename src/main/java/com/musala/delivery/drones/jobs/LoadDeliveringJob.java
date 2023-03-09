@@ -2,7 +2,6 @@ package com.musala.delivery.drones.jobs;
 
 import com.musala.delivery.drones.dto.HistoryDto;
 import com.musala.delivery.drones.dto.HistoryRequestDto;
-import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.services.ActivityHistoryService;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -53,6 +51,8 @@ public class LoadDeliveringJob {
                         case DELIVERED -> {
                             droneService.updateDroneStateById(drone.getId(), EStatus.RETURNING);
                             log.info("drone with id {} status updated from DELIVERED to RETURNING", drone.getId());
+                            drone.setMedications(null);
+                            droneService.save(drone);
                         }
                         case RETURNING -> {
                             droneService.updateDroneStateById(drone.getId(), EStatus.IDLE);
