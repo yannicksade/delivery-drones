@@ -32,7 +32,7 @@ public class MedicationController {
 	private ResponseEntity<MedicationDto> getMedicationDetails(@RequestParam("code") String code) throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(medicationService.getDroneByCode(code));
 	}
-	
+
 	@GetMapping("allMedicationsByDrone/{droneId}")
 	private ResponseEntity<List<MedicationDto>> getDroneMedications(@PathVariable("droneId") Long droneId) {
 		return ResponseEntity.ok().body(medicationService.getAllMedicationsByDrone(droneId));
@@ -47,6 +47,7 @@ public class MedicationController {
 	private ResponseEntity<MedicationDto> update(@Valid @RequestBody MedicationRequestDto request) {
 		return ResponseEntity.ok().body(medicationService.updateMedication(request));
 	}
+
 }
 
 

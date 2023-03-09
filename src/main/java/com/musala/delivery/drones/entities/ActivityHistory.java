@@ -23,16 +23,24 @@ public class ActivityHistory {
     private Long id;
 
     @Column(name = "ORIGIN_LOCATION")
-    private String startPointLocation;
+    private String originLocation;
 
     @Column(name = "DESTINATION_LOCATION")
     private String destinationLocation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trip_state")
-    private EStatus journeyState;
+    @Column(name = "TRIP_STATE")
+    private EStatus historyState;
 
     @Column(name = "STARTED_AT")
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DRONE_ID")
+    private Drone drone;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEDICATION_ID")
+    private Medication medication;
 }

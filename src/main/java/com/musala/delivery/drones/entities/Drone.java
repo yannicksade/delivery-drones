@@ -56,9 +56,4 @@ public class Drone {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<Medication> medications = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DRONE_ID")
-    private List<ActivityHistory> histories = new ArrayList<>();
-
 }
