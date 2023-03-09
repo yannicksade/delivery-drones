@@ -12,6 +12,7 @@ import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 
 public interface DroneService {
 
+    Optional<Drone> findById(long id);
     List<DroneDto> getAllAvailableDrones();
     List<Drone> findAllDrones();
     DroneDto registerDrone(DroneRequestDto droneRequest) throws InvalidRequestException, DroneAlreadyRegisteredException;
@@ -28,5 +29,5 @@ public interface DroneService {
 
     DroneDto updateDrone(DroneRequestDto droneRequest);
 
-    Integer loadDrone(Long droneId, LoadRequestDto load) throws ResourceNotFoundException;
+    Drone save(Drone drone);
 }

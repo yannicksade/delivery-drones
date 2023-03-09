@@ -33,10 +33,6 @@ public class DroneServiceImpl implements DroneService {
 
     private final LoadMapper loadMapper;
 
-    /*Optional<Drone> getDroneById(long id) {
-        return droneRepository.findById(id);
-    }*/
-
     @Override
     public List<DroneDto> getAllAvailableDrones() {
         return droneRepository.findByState(EStatus.IDLE).stream().map(droneMapper::toDto).collect(Collectors.toList());
@@ -124,21 +120,5 @@ public class DroneServiceImpl implements DroneService {
     public void updateDroneStateById(long id, EStatus state) {
         log.info("A drone with ID {} is changed state to {}", id, state);
         droneRepository.updateDroneState(id, state);
-    }
-
-    @Override
-    public Integer loadDrone(Long droneId, LoadRequestDto loadRequest) throws ResourceNotFoundException {
-       Drone drone = droneRepository.findById(droneId).orElseThrow(() -> new ResourceNotFoundException("No drone available"));
-        return saveLoads(drone, loadRequest);
-    }
-    private Integer saveLoads(Drone drone, LoadRequestDto loadRequest) {
-        LoadRequest load = loadMapper.toLoad(loadRequest);
-        if (null != load.getMedication()) {
-            drone.getMedications().add(load.getMedication());
-        }
-        if (null != load.getMedications() && load.getMedications().size() > 0) {
-            load.getMedications().forEach(e -> drone.getMedications().add(e));
-        }
-        return droneRepository.save(drone).getMedications().size();
     }
 }

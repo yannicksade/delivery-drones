@@ -1,6 +1,8 @@
 package com.musala.delivery.drones.controllers;
 
 
+import com.musala.delivery.drones.dto.DroneDto;
+import com.musala.delivery.drones.dto.DroneRequestDto;
 import com.musala.delivery.drones.dto.HistoryDto;
 import com.musala.delivery.drones.dto.HistoryRequestDto;
 import com.musala.delivery.drones.services.ActivityHistoryService;

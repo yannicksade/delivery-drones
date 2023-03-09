@@ -54,8 +54,4 @@ public class DroneController {
 	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) {
 		return ResponseEntity.ok().body(droneService.updateDrone(request));
 	}
-	@PostMapping("load/{droneId}")
-	private ResponseEntity<Integer> loadDrone(@Valid @PathVariable("droneId") Long id, @RequestBody LoadRequestDto request) throws ResourceNotFoundException {
-		return ResponseEntity.ok().body(droneService.loadDrone(id, request));
-	}
 }
