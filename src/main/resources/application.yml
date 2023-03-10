@@ -1,0 +1,28 @@
+server:
+  port: 8050
+  servlet:
+    context-path: /api/v1
+spring:
+  security:
+    user:
+      name: root
+      password: root
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: admin
+    password: admin
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /doc
+  api-docs:
+    enabled: true
