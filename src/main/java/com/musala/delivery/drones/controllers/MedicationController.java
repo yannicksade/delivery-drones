@@ -2,6 +2,8 @@ package com.musala.delivery.drones.controllers;
 
 import java.util.List;
 
+import com.musala.delivery.drones.services.FileUploaderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,20 +16,19 @@ import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.MedicationService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
 @RequestMapping("medication")
+@RequiredArgsConstructor
 //@ApiOperation("Medication API")
 public class MedicationController {
 	
 	private final MedicationService medicationService;
-	
-	@Autowired
-	private MedicationController(MedicationService medicationService) {
-		this.medicationService = medicationService;
-	}
-	
+
+	private final FileUploaderService fileUploaderService;
+
 	@GetMapping("details")
 	private ResponseEntity<MedicationDto> getMedicationDetails(@RequestParam("code") String code) throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(medicationService.getDroneByCode(code));
@@ -39,8 +40,9 @@ public class MedicationController {
 	}
 	
 	@PostMapping("create")
-    public ResponseEntity<MedicationDto> createMedication(@Valid @RequestBody MedicationRequestDto request) throws InvalidRequestException, MedicationAlreadyRegisteredException {
-        return ResponseEntity.ok().body(medicationService.createMedication(request));
+    public ResponseEntity<MedicationDto> createMedication(@Valid @RequestBody MedicationRequestDto request, @RequestParam("file") MultipartFile multiPartFile) throws InvalidRequestException, MedicationAlreadyRegisteredException {
+		request.setImage(fileUploaderService.uploadFile(multiPartFile));
+		return ResponseEntity.ok().body(medicationService.createMedication(request));
     }
 	
 	@PutMapping("update")
