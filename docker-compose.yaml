@@ -16,7 +16,7 @@ services:
     volumes:
       - type: volume
         source: img-file
-        target: ../files
+        target: /usr/local/lib/files
   postgres-db:
     image: postgres:15.2-alpine3.17
     container_name: drones-db

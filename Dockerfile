@@ -1,5 +1,5 @@
 FROM maven:3.8.5-openjdk-17-slim AS build
-RUN mkdir /home/files
+RUN mkdir /usr/local/lib/files
 WORKDIR /home/app
 ADD pom.xml .
 RUN mvn -f ./pom.xml clean package

@@ -25,7 +25,7 @@ public class FileUploaderImpl implements FileUploaderService {
         String fileName = multipartFile.getOriginalFilename() + '_' +
                 generateFileName().get();
         try {
-            String location = "/";
+            String location = "/usr/local/lib/files";
             File file = new File(location + "//" + fileName);
             multipartFile.transferTo(file);
         } catch (IOException | IllegalStateException ex) {
