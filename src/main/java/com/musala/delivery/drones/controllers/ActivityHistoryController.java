@@ -20,6 +20,10 @@ public class ActivityHistoryController {
 
     private final ActivityHistoryService historyService;
 
+    @GetMapping("details/{id}")
+    private ResponseEntity<HistoryDto> getDetails(@PathVariable("id") long id) {
+        return ResponseEntity.ok().body(historyService.getHistoryDetails(id));
+    }
     @GetMapping("all")
     private ResponseEntity<List<HistoryDto>> searchAll(@Valid @RequestBody HistoryRequestDto request) {
         return ResponseEntity.ok().body(historyService.getHistories(request));

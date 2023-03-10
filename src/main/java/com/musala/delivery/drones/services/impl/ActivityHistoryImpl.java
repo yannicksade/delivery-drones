@@ -6,6 +6,7 @@ import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.enumerations.EStatus;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.HistoryMapper;
 import com.musala.delivery.drones.repositories.ActivityHistoryRepository;
 import com.musala.delivery.drones.services.ActivityHistoryService;
@@ -58,8 +59,13 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
     }
 
     @Override
-    public void createHistory(ActivityHistory activityHistory) {
-        historyRepository.save(activityHistory);
+    public ActivityHistory createHistory(ActivityHistory activityHistory) {
+        return historyRepository.save(activityHistory);
+    }
+
+    @Override
+    public HistoryDto getHistoryDetails(long id) {
+        return historyMapper.toDto(historyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("no history details with that ID")));
     }
 
     private CriteriaQuery<ActivityHistory> getCriteria(HistoryRequestDto requestDto, String field, long id) {

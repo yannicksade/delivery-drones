@@ -18,4 +18,6 @@ public interface ActivityHistoryService {
     void updateActivityState(long id, EStatus status);
 
     ActivityHistory createHistory(ActivityHistory activityHistory);
+
+    HistoryDto getHistoryDetails(long id);
 }
