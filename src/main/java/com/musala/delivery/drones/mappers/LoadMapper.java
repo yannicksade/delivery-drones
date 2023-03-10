@@ -10,6 +10,5 @@ import org.springframework.stereotype.Service;
 @Mapper(componentModel = "spring")
 @Service
 public abstract class LoadMapper {
-    public abstract LoadRequestDto requestDto(LoadRequest loadRequest);
     public abstract LoadRequest toLoad(LoadRequestDto loadRequestDto);
 }
