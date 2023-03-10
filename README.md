@@ -52,9 +52,10 @@ While implementing your solution **please take care of the following requirement
 * Query about histories activities
 * Query about activity histories by drone
 * Query about activity histories by medication (in case of multiple medication trips. ex: a medication is shipped to a wrong destination and returned and then ship again...) 
-* Start activity 
+* Start activity
 * Check status and other data of history activity by ``activityHistoryId``
 * Check all loaded medicines for a drone by ``droneId``
+* upload image medication file and rename it randomly 
 
 #### Cron jobs
 * Check drones battery level every 1 min
