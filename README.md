@@ -64,4 +64,16 @@ While implementing your solution **please take care of the following requirement
   DELIVERED,
   RETURNING,IDLE``` to simulate finishing the drone trip
 
+#### API Docs 
+ - SWAGGER URL: http://127.0.0.1:8050/api/v1/swagger-ui/index.html#
+
+#### GET STARTED
+##### Step 1: Register drones
+##### Step 2: create medications on the system
+##### Step 3: load drone with medications
+###### Step 3-1: provide each medication valid data
+###### Step 3-2: provide data about the origin and destination
+###### finally "SUBMIT". the drone is leaving... Congrats!!!
+
+that's all!!
 :scroll: **END** 

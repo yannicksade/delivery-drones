@@ -3,8 +3,6 @@ package com.musala.delivery.drones.services.impl;
 import com.musala.delivery.drones.dto.HistoryDto;
 import com.musala.delivery.drones.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
-import com.musala.delivery.drones.entities.Drone;
-import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.HistoryMapper;
@@ -18,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoPeriod;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,15 +40,16 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
         return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, null, -1)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
+
     @Override
     public List<HistoryDto> getHistoriesByDrone(long droneID, HistoryRequestDto requestDto) {
-        return  Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "drone", droneID)).getResultList()).orElse(new ArrayList<>())
-        .stream().map(historyMapper::toDto).collect(Collectors.toList());
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "drone", droneID)).getResultList()).orElse(new ArrayList<>())
+                .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<HistoryDto> getHistoriesByMedication(long medicationID, HistoryRequestDto requestDto) {
-        return  Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()).orElse(new ArrayList<>())
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
@@ -73,28 +73,28 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
         CriteriaQuery<ActivityHistory> query = cb.createQuery(ActivityHistory.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<ActivityHistory> history = query.from(ActivityHistory.class);
-        if(field == "drone") {
+        if ("drone".equals(field)) {
             Join<Object, Object> root = history.join("drone", JoinType.INNER);
             predicates.add(cb.equal(root.get("id"), id));
         }
-        if(field == "medication") {
+        if ("medication".equals(field)) {
             Join<Object, Object> drone = history.join("medication", JoinType.INNER);
             predicates.add(cb.equal(drone.get("id"), id));
         }
-        String  end, start = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        end =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-        if(requestDto.getStartedAt() != null)
-            start = requestDto.getStartedAt().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));;
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+        if (requestDto.getStartedAt() != null)
+            start = requestDto.getStartedAt();
         predicates.add(cb.between(history.get("startedAt"), start, end));
-        if(requestDto.getHistoryState() != null)
+        if (requestDto.getHistoryState() != null)
             predicates.add(cb.equal(history.get("historyState"), requestDto.getHistoryState()));
-        if(requestDto.getDestinationLocation() != null)
+        if (requestDto.getDestinationLocation() != null)
             predicates.add(cb.like(history.get("destinationLocation"), requestDto.getDestinationLocation()));
-        if(requestDto.getOriginLocation() != null)
+        if (requestDto.getOriginLocation() != null)
             predicates.add(cb.like(history.get("originLocation"), requestDto.getOriginLocation()));
-
+        int nb = predicates.size();
         return query.select(history)
-                .where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+                .where(cb.and(predicates.toArray(new Predicate[nb])));
     }
 
 }

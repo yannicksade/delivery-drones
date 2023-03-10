@@ -29,12 +29,12 @@ public class ActivityHistory {
     private String destinationLocation;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "TRIP_STATE")
+    @Column(name = "ACTIVITY_STATE")
     private EStatus historyState;
 
     @Column(name = "STARTED_AT")
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
-    private LocalDateTime startedAt;
+    private LocalDateTime startedAt;//
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DRONE_ID", referencedColumnName = "id")

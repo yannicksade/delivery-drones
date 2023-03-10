@@ -54,5 +54,6 @@ public class Drone {
     private Float weightLimit;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    @JoinColumn(name = "DRONE_ID")
     private Set<Medication> medications = new HashSet<>();
 }
