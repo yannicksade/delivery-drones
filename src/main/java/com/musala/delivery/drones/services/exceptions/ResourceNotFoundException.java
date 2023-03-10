@@ -1,4 +1,4 @@
-package com.musala.delivery.drones.exceptions;
+package com.musala.delivery.drones.services.exceptions;
 
 
 @SuppressWarnings("serial")

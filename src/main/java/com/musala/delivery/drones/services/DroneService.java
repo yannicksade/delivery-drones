@@ -6,9 +6,9 @@ import java.util.Optional;
 import com.musala.delivery.drones.dto.*;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
-import com.musala.delivery.drones.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.services.exceptions.DroneAlreadyRegisteredException;
+import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
+import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 
 public interface DroneService {
 

@@ -6,7 +6,7 @@ import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.HistoryMapper;
 import com.musala.delivery.drones.repositories.ActivityHistoryRepository;
 import com.musala.delivery.drones.services.ActivityHistoryService;
@@ -17,11 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,18 +38,18 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
 
     @Override
     public List<HistoryDto> getHistories(HistoryRequestDto requestDto) {
-        return  entityManager.createQuery(getCriteria(requestDto, null, -1)).getResultList()
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, null, -1)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
     @Override
     public List<HistoryDto> getHistoriesByDrone(long droneID, HistoryRequestDto requestDto) {
-        return  entityManager.createQuery(getCriteria(requestDto, "drone", droneID)).getResultList()
+        return  Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "drone", droneID)).getResultList()).orElse(new ArrayList<>())
         .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public List<HistoryDto> getHistoriesByMedication(long medicationID, HistoryRequestDto requestDto) {
-        return  entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()
+        return  Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
@@ -74,11 +74,11 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
         List<Predicate> predicates = new ArrayList<>();
         Root<ActivityHistory> history = query.from(ActivityHistory.class);
         if(field == "drone") {
-            Join<Object, Object> drone = history.join(Drone.class.getName(), JoinType.INNER);
-            predicates.add(cb.equal(drone.get("id"), id));
+            Join<Object, Object> root = history.join("drone", JoinType.INNER);
+            predicates.add(cb.equal(root.get("id"), id));
         }
         if(field == "medication") {
-            Join<Object, Object> drone = history.join(Medication.class.getName(), JoinType.INNER);
+            Join<Object, Object> drone = history.join("medication", JoinType.INNER);
             predicates.add(cb.equal(drone.get("id"), id));
         }
         String  end, start = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));

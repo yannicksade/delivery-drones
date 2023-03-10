@@ -6,16 +6,15 @@ import java.util.stream.Collectors;
 
 import com.musala.delivery.drones.dto.*;
 import com.musala.delivery.drones.entities.Medication;
-import com.musala.delivery.drones.exceptions.DroneOverloadException;
-import com.musala.delivery.drones.mappers.LoadMapper;
+import com.musala.delivery.drones.services.exceptions.DroneOverloadException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
-import com.musala.delivery.drones.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.services.exceptions.DroneAlreadyRegisteredException;
+import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
+import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.DroneMapper;
 import com.musala.delivery.drones.repositories.DroneRepository;
 import com.musala.delivery.drones.services.DroneService;
@@ -30,8 +29,6 @@ public class DroneServiceImpl implements DroneService {
     private final DroneRepository droneRepository;
 
     private final DroneMapper droneMapper;
-
-    private final LoadMapper loadMapper;
 
     @Override
     public Optional<Drone> findById(long id) {

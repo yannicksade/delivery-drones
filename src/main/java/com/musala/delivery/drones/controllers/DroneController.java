@@ -2,16 +2,15 @@ package com.musala.delivery.drones.controllers;
 
 import java.util.List;
 
-import com.musala.delivery.drones.dto.LoadRequestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.musala.delivery.drones.dto.DroneDto;
 import com.musala.delivery.drones.dto.DroneRequestDto;
-import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
-import com.musala.delivery.drones.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.services.exceptions.DroneAlreadyRegisteredException;
+import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
+import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.DroneService;
 
 import jakarta.validation.Valid;
@@ -33,7 +32,7 @@ public class DroneController {
 		return ResponseEntity.ok().body(droneService.getDroneBySerialNumber(serialNumber));
 	}
 
-	@GetMapping("all")
+	@GetMapping("allAvailable")
 	private ResponseEntity<List<DroneDto>> getDrones() {
 		return ResponseEntity.ok().body(droneService.getAllAvailableDrones());
 	}

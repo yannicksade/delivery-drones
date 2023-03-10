@@ -1,4 +1,4 @@
-package com.musala.delivery.drones.tests;
+package com.musala.delivery.drones.suites;
 
 public class ActivityHistoryServiceTests {
 }

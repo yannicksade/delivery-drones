@@ -11,17 +11,14 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.musala.delivery.drones.dto.DroneDto;
-import com.musala.delivery.drones.dto.DroneRequestDto;
 import com.musala.delivery.drones.dto.MedicationDto;
 import com.musala.delivery.drones.dto.MedicationRequestDto;
 import com.musala.delivery.drones.entities.Medication;
-import com.musala.delivery.drones.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
-import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
+import com.musala.delivery.drones.services.exceptions.MedicationAlreadyRegisteredException;
+import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.MedicationMapper;
 import com.musala.delivery.drones.repositories.MedicationRepository;
 import com.musala.delivery.drones.services.MedicationService;

@@ -37,10 +37,10 @@ public class ActivityHistory {
     private LocalDateTime startedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DRONE_ID")
+    @JoinColumn(name = "DRONE_ID", referencedColumnName = "id")
     private Drone drone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEDICATION_ID")
+    @JoinColumn(name = "MEDICATION_ID", referencedColumnName = "id")
     private Medication medication;
 }

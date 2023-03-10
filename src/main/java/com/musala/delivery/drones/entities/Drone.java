@@ -45,7 +45,6 @@ public class Drone {
     private Integer batteryLevel;
 
     @Column(name = "STATE")
-    @Nonnull
     @Enumerated(EnumType.ORDINAL)
     private EStatus state;
 
