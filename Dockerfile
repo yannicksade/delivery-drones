@@ -6,5 +6,5 @@ COPY src ./src
 
 FROM openjdk:17-slim
 COPY --from=build  target/*.jar /usr/local/lib/drones.jar
-EXPOSE 8050
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/drones.jar"]
