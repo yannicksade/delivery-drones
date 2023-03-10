@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Slf4j
@@ -50,13 +51,13 @@ public class LoadDeliveringJob {
                             }
                             case DELIVERED -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.RETURNING);
-                                log.info("A drone with ID {} changed state to RETURNING", drone.getId());
-                                drone.setMedications(null);
+                                log.info("A drone with ID {} changed state from DELIVERED  to RETURNING", drone.getId());
+                                drone.setMedications(new HashSet<>());
                                 droneService.save(drone);
                             }
                             case RETURNING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.IDLE);
-                                log.info("A drone with ID {} changed state to IDLE", drone.getId());
+                                log.info("A drone with ID {} changed state from RETURNING to IDLE", drone.getId());
                             }
                             default -> {
                             }

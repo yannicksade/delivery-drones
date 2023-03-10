@@ -66,8 +66,11 @@ While implementing your solution **please take care of the following requirement
 
 #### API Docs 
  - SWAGGER URL: http://127.0.0.1:8050/api/v1/swagger-ui/index.html#
-
-#### GET STARTED
+#### RUN
+## 1- Java -jar drones.jar # run IN-MEMORY database
+## 2.1- pull dock image from registry
+## 2.1- Run docker run --d --name drone:last
+#### OPERATE
 ##### Step 1: Register drones
 ##### Step 2: create medications on the system
 ##### Step 3: load drone with medications
