@@ -1,15 +1,12 @@
 package com.musala.delivery.drones.suites;
 
-import com.musala.delivery.drones.dto.DroneDto;
-import com.musala.delivery.drones.dto.DroneRequestDto;
+import com.musala.delivery.drones.entities.dto.DroneDto;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EModel;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.mappers.DroneMapper;
-import com.musala.delivery.drones.services.DroneService;
 import com.musala.delivery.drones.services.impl.DroneServiceImpl;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,7 +20,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class DroneServiceTests {

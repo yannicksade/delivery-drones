@@ -10,11 +10,13 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
+import com.musala.delivery.drones.enumerations.EStatus;
+import com.musala.delivery.drones.services.exceptions.DroneAlreadyBusyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.musala.delivery.drones.dto.MedicationDto;
-import com.musala.delivery.drones.dto.MedicationRequestDto;
+import com.musala.delivery.drones.entities.dto.MedicationDto;
+import com.musala.delivery.drones.entities.dto.MedicationRequestDto;
 import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.services.exceptions.MedicationAlreadyRegisteredException;
@@ -30,71 +32,84 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MedicationServiceImpl implements MedicationService {
 
-	private final MedicationRepository medicationRepository;
+    private final MedicationRepository medicationRepository;
 
-	private final MedicationMapper medicationMapper;
+    private final MedicationMapper medicationMapper;
 
-	@Override
-	public List<MedicationDto> getAllMedicationsByDrone(long droneId) {
-		return medicationRepository.findAll().stream().map(medicationMapper::toDto).collect(Collectors.toList());
-	}
+    @Override
+    public List<MedicationDto> getAllMedicationsByDrone(long droneId) {
+        return medicationRepository.findAll().stream().map(medicationMapper::toDto).collect(Collectors.toList());
+    }
 
-	@Override
-	public MedicationDto createMedication(MedicationRequestDto request)
-			throws InvalidRequestException, MedicationAlreadyRegisteredException {
-		Optional<Medication> medecine = medicationRepository.findByName(request.getName());
-		if (medecine.isPresent()) {
-			throw new MedicationAlreadyRegisteredException("the provided medication item is already registered");
-		}
-		MedicationDto medicationDto = validateMedication(request);
-		log.info("A medication with code {} and name {} is saving...", request.getCode(), request.getName());
-		return medicationMapper.toDto(medicationRepository.save(
-					Medication.builder()
-					.code(medicationDto.getCode())
-					.name(medicationDto.getName())
-					.weight(medicationDto.getWeight())
-					.image(medicationDto.getImage())
-					.build()
-				));
-	}
+    @Override
+    public MedicationDto createMedication(MedicationRequestDto request)
+            throws InvalidRequestException, MedicationAlreadyRegisteredException {
+        Optional<Medication> medecine = medicationRepository.findByName(request.getName());
+        if (medecine.isPresent()) {
+            throw new MedicationAlreadyRegisteredException("the provided medication item is already registered");
+        }
+        MedicationDto medicationDto = validateMedication(request);
+        log.info("A medication with code {} and name {} is saving...", request.getCode(), request.getName());
+        return medicationMapper.toDto(medicationRepository.save(
+                Medication.builder()
+                        .code(medicationDto.getCode())
+                        .name(medicationDto.getName())
+                        .weight(medicationDto.getWeight())
+                        .image(medicationDto.getImage())
+                        .build()
+        ));
+    }
 
-	@Override
-	public MedicationDto updateMedication(MedicationRequestDto request) {
-		return medicationMapper.toDto(medicationRepository.save(medicationMapper.toEntity(request)));
-		
-	}
-	
-	@Override
-	public MedicationDto getDroneByCode(String code) throws ResourceNotFoundException {
-		return medicationMapper.toDto(medicationRepository.findByCode(code)
-				.orElseThrow(() -> new ResourceNotFoundException("No medication available with the code: " + code)));
-	}
-	@Override
-	public MedicationDto validateMedication(MedicationRequestDto request) throws InvalidRequestException {
-		if (request.equals(null)) {
-			throw new InvalidRequestException("Invalid data: " + null);
-		} if(request.getName().isBlank()) {
-			throw new InvalidRequestException("Medication Name is required");
-		} else if(!Pattern.matches("^[A-Za-z0-9-_]+$", request.getName())) {
-			throw new InvalidRequestException("Name must be composed solely of letters, numbers, hiphen and/or underscore");
-		} else if (request.getWeight() <= 0.0) {
-			throw new InvalidRequestException("medication weight must be greater than 0.0");
-		} else if(!Pattern.matches("^[A-Z0-9_]+$", request.getCode())) {
-			throw new InvalidRequestException("Code must be composed of solely UPPERCASE letters, underscores and numbers");
-		}
-		validateImageUrl(request.getName());
+    @Override
+    public MedicationDto updateMedication(MedicationRequestDto request) {
+        log.info("A Medication with codee {} is updated...", request.getCode());
+        return medicationMapper.toDto(medicationRepository.save(medicationMapper.toEntity(request)));
 
-		return medicationMapper.toDto(medicationMapper.toEntity(request));
-	}
+    }
 
-	private void validateImageUrl(String imageUrl) throws InvalidRequestException {
-		try {
-			Image image = ImageIO.read(new URL(imageUrl));
-			if (image == null) {
-				throw new InvalidRequestException("No image url found for this medication");
-			}
-		} catch (IOException ioe) {
-			throw new InvalidRequestException("Invalid image url or path");
-		}
-	}
+    @Override
+    public MedicationDto getDroneByCode(String code) throws ResourceNotFoundException {
+        return medicationMapper.toDto(medicationRepository.findByCode(code)
+                .orElseThrow(() -> new ResourceNotFoundException("No medication available with the code: " + code)));
+    }
+
+    @Override
+    public MedicationDto validateMedication(MedicationRequestDto request) throws InvalidRequestException {
+        if (request.equals(null)) {
+            throw new InvalidRequestException("Invalid data: " + null);
+        }
+        if (request.getName().isBlank()) {
+            throw new InvalidRequestException("Medication Name is required");
+        } else if (!Pattern.matches("^[A-Za-z0-9-_]+$", request.getName())) {
+            throw new InvalidRequestException("Name must be composed solely of letters, numbers, hiphen and/or underscore");
+        } else if (request.getWeight() <= 0.0) {
+            throw new InvalidRequestException("medication weight must be greater than 0.0");
+        } else if (!Pattern.matches("^[A-Z0-9_]+$", request.getCode())) {
+            throw new InvalidRequestException("Code must be composed of solely UPPERCASE letters, underscores and numbers");
+        }
+        validateImageUrl(request.getName());
+
+        return medicationMapper.toDto(medicationMapper.toEntity(request));
+    }
+
+    private void validateImageUrl(String imageUrl) throws InvalidRequestException {
+        try {
+            Image image = ImageIO.read(new URL(imageUrl));
+            if (image == null) {
+                throw new InvalidRequestException("No image url found for this medication");
+            }
+        } catch (IOException ioe) {
+            throw new InvalidRequestException("Invalid image url or path");
+        }
+    }
+
+    @Override
+    public void removeMedication(String code) {
+        //remove only when drone not delivering yet
+        if(!medicationRepository.checkIfLoaded(code, EStatus.LOADING, EStatus.LOADED)) throw new DroneAlreadyBusyException("Medication cannot be remove; Drone is busy");
+
+        medicationRepository.delete(medicationRepository.findByCode(code).orElseThrow(() -> new ResourceNotFoundException("Medication with code not exists")));
+        log.info("A medication with code {} is deleted...", code);
+
+    }
 }

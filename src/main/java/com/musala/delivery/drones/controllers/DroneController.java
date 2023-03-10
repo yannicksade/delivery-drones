@@ -1,13 +1,16 @@
 package com.musala.delivery.drones.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.musala.delivery.drones.entities.dto.SuccessMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.musala.delivery.drones.dto.DroneDto;
-import com.musala.delivery.drones.dto.DroneRequestDto;
+import com.musala.delivery.drones.entities.dto.DroneDto;
+import com.musala.delivery.drones.entities.dto.DroneRequestDto;
 import com.musala.delivery.drones.services.exceptions.DroneAlreadyRegisteredException;
 import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
@@ -17,17 +20,13 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("drone")
+@RequiredArgsConstructor
 public class DroneController {
 
 	private final DroneService droneService;
 
-	@Autowired
-	public DroneController(DroneService droneService) {
-		this.droneService = droneService;
-	}
-
 	@GetMapping("details")
-	private ResponseEntity<DroneDto> getDroneDetails(@RequestParam("serialNumber") String serialNumber)
+	private ResponseEntity<DroneDto> getDroneDetails(@Valid @RequestParam("serialNumber") String serialNumber)
 			throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.getDroneBySerialNumber(serialNumber));
 	}
@@ -43,14 +42,28 @@ public class DroneController {
 		return ResponseEntity.ok().body(droneService.registerDrone(request));
 	}
 
-	@GetMapping("checkBattery")
-	private ResponseEntity<Float> getDroneBatteryLevel(@RequestParam("droneId") long id)
+	@GetMapping("checkBattery/{droneId}")
+	private ResponseEntity<Float> getDroneBatteryLevel(@PathVariable("droneId") long id)
 			throws ResourceNotFoundException {
 		return ResponseEntity.ok().body(droneService.checkDroneBatteryLevelById(id));
 	}
 
-	@PutMapping("update")
+	@PatchMapping("update")
 	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) {
 		return ResponseEntity.ok().body(droneService.updateDrone(request));
+	}
+
+	@DeleteMapping("delete")
+	private ResponseEntity remove(@RequestParam("serialNumber") String serialNumber) {
+		droneService.removeDrone(serialNumber);
+		return ResponseEntity.ok().body(
+				SuccessMessage.builder()
+						.code(HttpStatus.OK)
+						.message("SUCCESS")
+						.value(serialNumber)
+						.description("Drone with specified code deleted")
+						.date(LocalDateTime.now())
+						.build()
+		);
 	}
 }

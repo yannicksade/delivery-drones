@@ -3,8 +3,8 @@ package com.musala.delivery.drones.mappers;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
-import com.musala.delivery.drones.dto.MedicationDto;
-import com.musala.delivery.drones.dto.MedicationRequestDto;
+import com.musala.delivery.drones.entities.dto.MedicationDto;
+import com.musala.delivery.drones.entities.dto.MedicationRequestDto;
 import com.musala.delivery.drones.entities.Medication;
 
 @Mapper(componentModel = "spring")

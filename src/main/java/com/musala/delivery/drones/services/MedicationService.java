@@ -1,8 +1,9 @@
 package com.musala.delivery.drones.services;
 
 import java.util.List;
-import com.musala.delivery.drones.dto.MedicationDto;
-import com.musala.delivery.drones.dto.MedicationRequestDto;
+
+import com.musala.delivery.drones.entities.dto.MedicationDto;
+import com.musala.delivery.drones.entities.dto.MedicationRequestDto;
 import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
 import com.musala.delivery.drones.services.exceptions.MedicationAlreadyRegisteredException;
 import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
@@ -18,4 +19,6 @@ public interface MedicationService {
 	MedicationDto validateMedication(MedicationRequestDto request) throws InvalidRequestException;
 	
 	MedicationDto updateMedication(MedicationRequestDto request);
+
+	void removeMedication(String code);
 }

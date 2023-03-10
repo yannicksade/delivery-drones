@@ -1,7 +1,7 @@
 package com.musala.delivery.drones.services.impl;
 
-import com.musala.delivery.drones.dto.HistoryDto;
-import com.musala.delivery.drones.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
@@ -16,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoPeriod;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +62,7 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
     }
 
     @Override
-    public HistoryDto getHistoryDetails(long id) {
+    public HistoryDto getHistoryDetails(long id) throws ResourceNotFoundException{
         return historyMapper.toDto(historyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("no history details with that ID")));
     }
 

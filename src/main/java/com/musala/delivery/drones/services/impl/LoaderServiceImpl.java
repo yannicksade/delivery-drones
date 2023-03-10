@@ -1,8 +1,8 @@
 package com.musala.delivery.drones.services.impl;
 
-import com.musala.delivery.drones.dto.HistoryRequestDto;
-import com.musala.delivery.drones.dto.LoadRequest;
-import com.musala.delivery.drones.dto.LoadRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.LoadRequest;
+import com.musala.delivery.drones.entities.dto.LoadRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.entities.Medication;
@@ -31,8 +31,7 @@ public class LoaderServiceImpl implements LoaderService {
 
     @Override
     public Integer loadDrone(Long droneId, LoadRequestDto loadRequest) throws ResourceNotFoundException, DroneAlreadyBusyException, DroneOverloadException {
-        Drone drone = droneService.findById(droneId).orElseThrow(() -> new ResourceNotFoundException("No drone available"));
-        return saveLoads(drone, loadRequest);
+        return saveLoads(droneService.findById(droneId), loadRequest);
     }
 
     private Integer saveLoads(Drone drone, LoadRequestDto loadRequestDto) throws DroneAlreadyBusyException, DroneOverloadException, LowBatteryException, InvalidRequestException {
@@ -63,7 +62,7 @@ public class LoaderServiceImpl implements LoaderService {
         validateHistoryActivityData(loadRequestDto);
         drone.getMedications().forEach(medication -> saveActivityHistory(drone, medication, loadRequestDto));
         drone.setState(EStatus.LOADING);
-        log.info("A drone with ID {} is in LOADING state", drone.getId());
+        log.info("A drone with ID {} is in LOADING", drone.getId());
         return droneService.save(drone).getMedications().size();
     }
 

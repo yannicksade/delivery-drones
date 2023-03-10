@@ -1,19 +1,17 @@
 package com.musala.delivery.drones.controllers;
 
-import com.musala.delivery.drones.dto.LoadRequestDto;
+import com.musala.delivery.drones.entities.dto.LoadRequestDto;
 import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.LoaderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("loader")
 @RequiredArgsConstructor
-@Validated
 public class LoaderController {
     private final LoaderService loaderService;
 

@@ -1,6 +1,6 @@
 package com.musala.delivery.drones.services.exceptions.handler;
 
-import com.musala.delivery.drones.dto.ErrorMessage;
+import com.musala.delivery.drones.entities.dto.ErrorMessage;
 
 import java.time.LocalDateTime;
 

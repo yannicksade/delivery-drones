@@ -1,7 +1,7 @@
 package com.musala.delivery.drones.jobs;
 
-import com.musala.delivery.drones.dto.HistoryDto;
-import com.musala.delivery.drones.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.services.ActivityHistoryService;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -40,6 +41,8 @@ public class LoadDeliveringJob {
                                 log.info("Activity history identified By {} changed state from LOADED to DELIVERING", activityHistory.getId());
                             }
                             case LOADED -> {
+
+                                log.info("A drone with ID {} is loaded, total load {}g ", drone.getId(), droneService.checkDroneLoad(Optional.of(drone)));
                                 droneService.updateDroneStateById(drone.getId(), EStatus.DELIVERING);
                                 log.info("A drone with ID {} changed state from LOADED to DELIVERING", drone.getId());
                             }
@@ -53,7 +56,8 @@ public class LoadDeliveringJob {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.RETURNING);
                                 log.info("A drone with ID {} changed state from DELIVERED  to RETURNING", drone.getId());
                                 drone.setMedications(new HashSet<>());
-                                droneService.save(drone);
+                                drone = droneService.save(drone);
+                                log.info("A drone with ID {} is unloaded, remaining load {}g ", drone.getId(), droneService.checkDroneLoad(Optional.of(drone)));
                             }
                             case RETURNING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.IDLE);

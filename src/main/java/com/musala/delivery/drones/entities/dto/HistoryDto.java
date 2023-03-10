@@ -1,4 +1,4 @@
-package com.musala.delivery.drones.dto;
+package com.musala.delivery.drones.entities.dto;
 
 import com.musala.delivery.drones.enumerations.EStatus;
 import lombok.Builder;

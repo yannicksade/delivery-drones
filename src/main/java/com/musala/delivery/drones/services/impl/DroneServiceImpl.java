@@ -2,19 +2,18 @@ package com.musala.delivery.drones.services.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.musala.delivery.drones.dto.*;
 import com.musala.delivery.drones.entities.Medication;
-import com.musala.delivery.drones.services.exceptions.DroneOverloadException;
+import com.musala.delivery.drones.entities.dto.DroneDto;
+import com.musala.delivery.drones.entities.dto.DroneRequestDto;
+import com.musala.delivery.drones.services.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.services.exceptions.DroneAlreadyRegisteredException;
-import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.DroneMapper;
 import com.musala.delivery.drones.repositories.DroneRepository;
 import com.musala.delivery.drones.services.DroneService;
@@ -31,8 +30,8 @@ public class DroneServiceImpl implements DroneService {
     private final DroneMapper droneMapper;
 
     @Override
-    public Optional<Drone> findById(long id) {
-        return droneRepository.findById(id);
+    public Drone findById(long id) throws ResourceNotFoundException {
+        return droneRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Drone details Found"));
     }
 
     @Override
@@ -57,8 +56,9 @@ public class DroneServiceImpl implements DroneService {
         log.info("A drone with  serial number {} and model {} is saving ", request.getSerialNumber(), request.getModel());
         return droneMapper.toDto(droneRepository.save(
                 Drone.builder()
+                        .id(new Random().nextLong(10, 100))
                         .batteryLevel(100)
-                        .state(droneDto.getState())
+                        .state(EStatus.IDLE)
                         .model(droneDto.getModel())
                         .weightLimit(droneDto.getWeightLimit())
                         .serialNumber(droneDto.getSerialNumber())
@@ -96,6 +96,7 @@ public class DroneServiceImpl implements DroneService {
         }
         return droneMapper.toDto(droneMapper.toEntity(request));
     }
+
     @Override
     public Double checkDroneLoad(Optional<Drone> drone) {
         if (!drone.isPresent()) {
@@ -107,9 +108,25 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public DroneDto updateDrone(DroneRequestDto request) {
+    public DroneDto updateDrone(DroneRequestDto request) throws DroneAlreadyBusyException, ResourceNotFoundException {
         validateDrone(request);
-        return droneMapper.toDto(droneRepository.save(droneMapper.toEntity(request)));
+        Drone drone = droneRepository.findBySerialNumber(request.getSerialNumber()).orElseThrow(() -> new ResourceNotFoundException("No drone with that serial nomber"));
+        if (!drone.getState().equals(EStatus.IDLE)) throw new DroneAlreadyBusyException("Drone is Busy cannot update");
+        if (!drone.getModel().equals(request.getModel()))
+            drone.setModel(request.getModel());
+        if (!drone.getWeightLimit().equals(request.getWeightLimit()))
+            drone.setWeightLimit(request.getWeightLimit());
+        log.info("A drone with serial number {} is updated...", drone.getSerialNumber());
+        return droneMapper.toDto(droneRepository.save(drone));
+    }
+
+    @Override
+    public void removeDrone(String serialNumber) throws DroneAlreadyBusyException {
+        //remove only when not busy
+        if(droneRepository.checkState(serialNumber, EStatus.IDLE) == 0) throw new DroneAlreadyBusyException("Drone is Busy cannot be deleted ");
+
+        droneRepository.delete(droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("Drone with serial Number not Exists")));
+        log.info("A drone with serial number {} is deleted...", serialNumber);
     }
 
     @Override
@@ -130,7 +147,7 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public void updateDroneStateById(long id, EStatus state) {
-        log.info("A drone with ID {} is changed state to {}", id, state);
+        //log.info("A drone with ID {} is changed state to {}", id, state);
         droneRepository.updateDroneState(id, state);
     }
 }
