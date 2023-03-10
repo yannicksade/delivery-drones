@@ -7,18 +7,25 @@ services:
       - 8050:8080
     depends_on:
       - postgres-db
+      - drone-files
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/dronedb
-      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_JPA_DATABASE-PLATFORM=org.hibernate.dialect.PostgreSQLDialect
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    volumes:
+      - type: volume
+        source: img-file
+        target: ../files
   postgres-db:
-    image: postgres:15-alpine3.17
+    image: postgres:15.2-alpine3.17
     container_name: drones-db
     environment:
-      - POSTGRES_USER=root
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=root
 
+volumes:
+  img-file:
 
 
 

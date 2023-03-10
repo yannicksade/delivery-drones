@@ -24,24 +24,5 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /doc
-
   api-docs:
     enabled: true
- #spring:
-  #datasource:
-   # hikari:
-   #   connectionTimeout: 20000
-  #flyway:
-  #  url: jdbc:h2:mem:h2
-  #  schemas: testdb
-  #  user: admin
-  #-  password: admin   
-#    driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://localhost:5432/{your_database_name}
-#    username: postrgres
-#    password: admin
-#  jpa:
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#    defer-datasource-initialization: true
-#    hibernate:
-#      ddl-auto: none
