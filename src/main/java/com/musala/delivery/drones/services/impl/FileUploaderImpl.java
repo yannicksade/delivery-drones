@@ -12,8 +12,10 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,39 +24,35 @@ public class FileUploaderImpl implements FileUploaderService {
 
     @Override
     public String uploadFile(MultipartFile multipartFile) throws InvalidRequestException {
-        String fileName = multipartFile.getOriginalFilename() + '_' +
-                generateFileName().get();
-        try {
-            String linuxReLocation = "/usr/local/lib/files";
-            String windowsRelocation = "C:\\";
-            File file = new File(windowsRelocation + "//" + fileName);
-            multipartFile.transferTo(file);
-        } catch (IOException | IllegalStateException ex) {
-            try {
-                String linuxReLocation = "/usr/local/lib/files";
-                String windowsRelocation = "C:\\";
-
-            } catch (ex) {
-            throw new InvalidRequestException(ex.getMessage());}
+        String fileName = multipartFile.getOriginalFilename();
+        String[] parts = fileName.split("\\.");
+       int size = Arrays.asList(parts).size();
+        log.error("Loading file {} of extension {} and size {} ",  fileName, multipartFile.getName(),  multipartFile.getSize());
+        String ext = parts[size - 1];
+        log.info("Loading file of extension {} " + ext);
+        fileName = fileName.replace("."  + ext, "") + '_' + generateFileName().get() + '.' + ext;
+        String windowsRelocation = "D:\\lib\\files";
+        String linuxReLocation = "/usr/local/lib/files";
+        try { // store file on linux environment
+            File file = new File(linuxReLocation + "/" + fileName);
+            fileName = storeFile(multipartFile, file);
+        } catch (IOException | IllegalStateException lex) {
+            try {// store file on windows environment
+                File file = new File(windowsRelocation + "//" + fileName);
+                fileName = storeFile(multipartFile, file);
+            } catch (IOException | IllegalStateException wex) {
+                throw new InvalidRequestException(wex.getMessage());
+            }
         }
         return fileName;
     }
-    private String store(String fileName) {
-        File file = new File(fileName + "//" + fileName);
+
+    private String storeFile(MultipartFile multipartFile, File file) throws IOException {
         multipartFile.transferTo(file);
-    }
-    private void validateImageUrl(String imageUrl) throws InvalidRequestException {
-        try {
-            Image image = ImageIO.read(new URL(imageUrl));
-            if (image == null) {
-                throw new InvalidRequestException("No image url found for this medication");
-            }
-        } catch (IOException ioe) {
-            throw new InvalidRequestException("Invalid image url or path");
-        }
+        return file.getName();
     }
 
     private Supplier<String> generateFileName() {
-        return () -> UUID.randomUUID().toString().substring(6);
+        return () -> UUID.randomUUID().toString().substring(0, 2);
     }
 }

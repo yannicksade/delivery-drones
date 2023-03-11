@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.services.FileUploaderService;
 import com.musala.delivery.drones.services.exceptions.*;
@@ -117,8 +118,9 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public MedicationDto updatedImage(String code, MultipartFile multiPartFile) throws ResourceNotFoundException, InvalidRequestException {
         Medication medication = medicationRepository.findByCode(code).orElseThrow(() -> new ResourceNotFoundException("no medication found for id"));
-        medication.setImage(fileUploaderService.uploadFile(multiPartFile));
-        medicationRepository.save(medication);
-        return null;
+        String filename = fileUploaderService.uploadFile(multiPartFile);
+        medication.setImage(filename);
+        log.info("image file of medication Code: {} stored and renamed to {} successfully", code, filename);
+        return medicationMapper.toDto(medicationRepository.save(medication));
     }
 }
