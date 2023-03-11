@@ -9,10 +9,9 @@ import lombok.Data;
 @Data
 @Builder
 public class DroneDto {
+	private String serialNumber;
 
 	private EModel model;
-	
-	private String serialNumber;
 
 	private Integer batteryLevel;
 

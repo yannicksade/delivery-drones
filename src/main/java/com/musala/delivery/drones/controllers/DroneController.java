@@ -21,47 +21,54 @@ import jakarta.validation.Valid;
 @RequiredArgsConstructor
 public class DroneController {
 
-	private final DroneService droneService;
+    private final DroneService droneService;
 
-	@GetMapping("details")
-	private ResponseEntity<DroneDto> getDroneDetails(@Valid @RequestParam("serialNumber") String serialNumber)
-			throws ResourceNotFoundException {
-		return ResponseEntity.ok().body(droneService.getDroneBySerialNumber(serialNumber));
-	}
+    @GetMapping("details")
+    private ResponseEntity<DroneDto> getDroneDetails(@Valid @RequestParam("serialNumber") String serialNumber)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(droneService.getDroneBySerialNumber(serialNumber));
+    }
 
-	@GetMapping("allAvailable")
-	private ResponseEntity<List<DroneDto>> getDrones() {
-		return ResponseEntity.ok().body(droneService.getAllAvailableDrones());
-	}
+    @GetMapping("allAvailable")
+    private ResponseEntity<List<DroneDto>> getDrones() {
+        return ResponseEntity.ok().body(droneService.getAllAvailableDrones());
+    }
 
-	@PostMapping("add")
-	private ResponseEntity<DroneDto> addDrone(@Valid @RequestBody DroneRequestDto request)
-			throws DroneAlreadyRegisteredException, InvalidRequestException, BusinessErrorException {
-		return ResponseEntity.ok().body(droneService.registerDrone(request));
-	}
+    @PostMapping("add")
+    private ResponseEntity<DroneDto> addDrone(@Valid @RequestBody DroneRequestDto request)
+            throws DroneAlreadyRegisteredException, InvalidRequestException, BusinessErrorException {
+        return ResponseEntity.ok().body(droneService.registerDrone(request));
+    }
 
-	@GetMapping("checkBattery/{droneId}")
-	private ResponseEntity<Float> getDroneBatteryLevel(@PathVariable("droneId") long id)
-			throws ResourceNotFoundException {
-		return ResponseEntity.ok().body(droneService.checkDroneBatteryLevelById(id));
-	}
+    @GetMapping("checkBattery/{droneId}")
+    private ResponseEntity<SuccessMessage> getDroneBatteryLevel(@PathVariable("droneId") long id)
+            throws ResourceNotFoundException {
+        return ResponseEntity.ok().body(SuccessMessage.builder()
+                .code(HttpStatus.OK)
+                .message("Battery level checking")
+                .description("Battery level for drone id:" + id)
+                .date(LocalDateTime.now())
+                .value(droneService.checkDroneBatteryLevelById(id) + "%")
+                .build()
+        );
+    }
 
-	@PatchMapping("update")
-	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) throws DroneAlreadyBusyException, ResourceNotFoundException, BusinessErrorException {
-		return ResponseEntity.ok().body(droneService.updateDrone(request));
-	}
+    @PatchMapping("update")
+    private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) throws DroneAlreadyBusyException, ResourceNotFoundException, BusinessErrorException {
+        return ResponseEntity.ok().body(droneService.updateDrone(request));
+    }
 
-	@DeleteMapping("delete")
-	private ResponseEntity remove(@RequestParam("serialNumber") String serialNumber) throws BusinessErrorException {
-		droneService.removeDrone(serialNumber);
-		return ResponseEntity.ok().body(
-				SuccessMessage.builder()
-						.code(HttpStatus.OK)
-						.message("SUCCESS")
-						.value(serialNumber)
-						.description("Drone with specified code deleted")
-						.date(LocalDateTime.now())
-						.build()
-		);
-	}
+    @DeleteMapping("delete")
+    private ResponseEntity remove(@RequestParam("serialNumber") String serialNumber) throws BusinessErrorException {
+        droneService.removeDrone(serialNumber);
+        return ResponseEntity.ok().body(
+                SuccessMessage.builder()
+                        .code(HttpStatus.OK)
+                        .message("SUCCESS")
+                        .value(serialNumber)
+                        .description("Drone with specified code deleted")
+                        .date(LocalDateTime.now())
+                        .build()
+        );
+    }
 }

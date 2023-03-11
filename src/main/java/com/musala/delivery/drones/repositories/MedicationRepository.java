@@ -15,8 +15,6 @@ public interface MedicationRepository extends JpaRepository<Medication, Long> {
 
     Optional<Medication> findByCode(String mdedication);
 
-    Optional<Medication> findByName(String name);
-
-    @Query(value = "SELECT COUNT(m) FROM MS_DL_MEDICATION m LEFT JOIN MS_DL_DRONE d ON d.ID = m.DRONE_ID WHERE m.CODE = :code AND (m.DRONE_ID IS NULL OR d.STATE IN (:loading, :loaded))", nativeQuery = true)
-    boolean checkIfLoaded(String code, EStatus loading, EStatus loaded);
+    @Query(value = "SELECT COUNT(*) FROM MS_DL_MEDICATION m LEFT JOIN MS_DL_DRONE d ON d.ID = m.DRONE_ID WHERE m.CODE = :code AND (m.DRONE_ID IS NULL OR d.STATE IN (:loading, :loaded))", nativeQuery = true)
+    Integer checkIfLoaded(String code, int loading, int loaded);
 }

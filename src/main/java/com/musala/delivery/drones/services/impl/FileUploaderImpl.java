@@ -7,15 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,6 +49,6 @@ public class FileUploaderImpl implements FileUploaderService {
     }
 
     private Supplier<String> generateFileName() {
-        return () -> UUID.randomUUID().toString().substring(0, 2);
+        return () -> UUID.randomUUID().toString().substring(0, 6);
     }
 }

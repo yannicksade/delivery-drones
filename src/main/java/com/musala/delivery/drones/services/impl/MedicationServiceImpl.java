@@ -1,7 +1,6 @@
 package com.musala.delivery.drones.services.impl;
 
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -20,7 +19,6 @@ import com.musala.delivery.drones.repositories.MedicationRepository;
 import com.musala.delivery.drones.services.MedicationService;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -46,7 +44,7 @@ public class MedicationServiceImpl implements MedicationService {
         try {
             medicationDto = medicationMapper.toDto(medicationRepository.save(
                     Medication.builder()
-                            .id(new Random().nextLong(10, 100))
+                            //.id(new Random().nextLong(10, 100))
                             .code(medicationDto.getCode())
                             .name(medicationDto.getName())
                             .weight(medicationDto.getWeight())
@@ -103,16 +101,14 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public void removeMedication(String code) throws BusinessErrorException {
         //remove only when drone not delivering yet
-        if (!medicationRepository.checkIfLoaded(code, EStatus.LOADING, EStatus.LOADED))
-            throw new DroneAlreadyBusyException("Medication cannot be remove; Drone is busy");
+        if (medicationRepository.checkIfLoaded(code, EStatus.LOADING.getCode(), EStatus.LOADED.getCode()) != 1)
+            throw new DroneAlreadyBusyException("Medication cannot be remove, it is being delivering");
         try {
             medicationRepository.delete(medicationRepository.findByCode(code).orElseThrow(() -> new ResourceNotFoundException("Medication with code not exists")));
             log.info("A medication with code {} is deleted...", code);
         } catch (DataAccessException ex) {
             throw new BusinessErrorException("Medication identified by code - " + ex.getMostSpecificCause().getMessage());
         }
-
-
     }
 
     @Override

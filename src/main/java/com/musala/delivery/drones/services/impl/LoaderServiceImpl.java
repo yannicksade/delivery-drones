@@ -37,15 +37,16 @@ public class LoaderServiceImpl implements LoaderService {
     private Integer saveLoads(Drone drone, LoadRequestDto loadRequestDto) throws DroneAlreadyBusyException, DroneOverloadException, LowBatteryException, InvalidRequestException {
         LoadRequest load = loadMapper.toLoad(loadRequestDto);
         if (!drone.getState().equals(EStatus.IDLE)) {
-            throw new DroneAlreadyBusyException("Done is already busy");
+            throw new DroneAlreadyBusyException("Done is working already");
         }
         if (drone.getBatteryLevel() < 25) {
-            throw new LowBatteryException("Done is already busy");
+            throw new LowBatteryException("Done battery is very low");
         }
         double weight = 0.0d;
         if (load.getMedications() != null) {
             weight = load.getMedications().stream().map(Medication::getWeight).reduce(0.0f, Float::sum);
         }
+        System.out.println(">>>>>>>>>>>>>>>>>>>: " + loadRequestDto.getMedicationId());
         if (load.getMedication() != null) {
             weight += load.getMedication().getWeight();
         }
