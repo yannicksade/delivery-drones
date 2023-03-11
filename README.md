@@ -57,6 +57,7 @@ While implementing your solution **please take care of the following requirement
 * Check all loaded medicines for a drone by ``droneId``
 * upload image medication file and rename it randomly 
 * CRUD Apis 
+* Validate non-functional behaviors
 
 #### Cron jobs
 * Check drones battery level every 1 min

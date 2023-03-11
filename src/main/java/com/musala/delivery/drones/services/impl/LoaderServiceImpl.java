@@ -48,17 +48,14 @@ public class LoaderServiceImpl implements LoaderService {
             throw new LowBatteryException("Done battery is very low");
         }
         double weight = 0.0d;
-        MedicationDto medicationDto = medicationService.getMedicationByCode(loadRequestDto.getMedicationCode());
-        weight += medicationDto.getWeight();
         List<MedicationDto> medicationDtoList = new ArrayList<>();
-        medicationDtoList.add(medicationDto);
         weight += loadRequestDto.getMedicationCodeList().stream().map(e -> {
             MedicationDto dto = medicationService.getMedicationByCode(e);
             medicationDtoList.add(dto);
             return dto;
         }).map(MedicationDto::getWeight).reduce(0.0f, Float::sum);
         log.info("Total load weight estimated: {} gramme(s)", weight);
-        Double droneWeight = droneService.checkDroneLoad(Optional.ofNullable(drone));
+        Double droneWeight = droneService.checkDroneLoad(Optional.of(drone));
         if (weight > droneWeight) {
             throw new DroneOverloadException("Done is Overloaded, load weight is too heavy");
         }
@@ -71,14 +68,14 @@ public class LoaderServiceImpl implements LoaderService {
         });
 
         drone.setState(EStatus.LOADING);
-        log.info("The drone with ID {} finished LOADING, final added weight is {} gramme(s)", weight);
+        log.info("The drone with ID {} finished LOADING, final added weight is {} gramme(s)", drone.getId(), weight);
         droneService.save(drone);
         return medicationService.getAllMedicationsByDrone(drone.getId()).size();
     }
 
     private Medication valiadte(Medication medication) throws MedicationLoadedAlreadyException {
         if (medicationService.checkIfMedicationIsLoadedOrDelivered(medication.getCode())) {
-            throw new MedicationLoadedAlreadyException("Cannot be loaded");
+            throw new MedicationLoadedAlreadyException("Cannot load again, medication with that code is loaded in another drone or has been shipped already.");
         }
         //the medication must not be in to another drone already
         return medication;

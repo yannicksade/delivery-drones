@@ -16,6 +16,5 @@ import java.util.List;
 public class LoadRequest {
 	private String originLocation;
 	private String destinationLocation;
-	private Medication medication;
 	private List<Medication> medications;
 }

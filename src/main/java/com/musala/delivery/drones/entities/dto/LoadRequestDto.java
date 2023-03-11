@@ -9,6 +9,5 @@ import java.util.List;
 public class LoadRequestDto {
 	private String originLocation;
 	private String destinationLocation;
-	private String medicationCode;
 	private List<String> medicationCodeList;
 }
