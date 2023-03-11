@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.musala.delivery.drones.entities.dto.SuccessMessage;
 import com.musala.delivery.drones.services.FileUploaderService;
+import com.musala.delivery.drones.services.exceptions.BusinessErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import com.musala.delivery.drones.entities.dto.MedicationDto;
@@ -34,7 +34,7 @@ public class MedicationController {
 
     @GetMapping("details")
     private ResponseEntity<MedicationDto> getMedicationDetails(@Valid @RequestParam("code") String code) throws ResourceNotFoundException {
-        return ResponseEntity.ok().body(medicationService.getDroneByCode(code));
+        return ResponseEntity.ok().body(medicationService.getMedicationByCode(code));
     }
 
     @GetMapping("allMedicationsByDrone/{droneId}")
@@ -43,13 +43,16 @@ public class MedicationController {
     }
 
     @PostMapping("create")
-    public ResponseEntity<MedicationDto> createMedication(@Valid @RequestBody MedicationRequestDto request, @RequestParam("file") MultipartFile multiPartFile) throws InvalidRequestException, MedicationAlreadyRegisteredException, HttpMessageNotReadableException {
-        request.setImage(fileUploaderService.uploadFile(multiPartFile));
+    public ResponseEntity<MedicationDto> createMedication(@Valid @RequestBody MedicationRequestDto request) throws InvalidRequestException, MedicationAlreadyRegisteredException, BusinessErrorException {
         return ResponseEntity.ok().body(medicationService.createMedication(request));
     }
 
-    @PutMapping("update")
-    private ResponseEntity<MedicationDto> update(@Valid @RequestBody MedicationRequestDto request) throws HttpMessageNotReadableException {
+    @PostMapping("image/{medicationCode}")
+    public ResponseEntity<MedicationDto> updateImage(@PathVariable("medicationCode") String code, @RequestParam("file") MultipartFile multiPartFile) throws ResourceNotFoundException, InvalidRequestException {
+        return ResponseEntity.ok().body(medicationService.updatedImage(code, multiPartFile));
+    }
+    @PatchMapping("update")
+    private ResponseEntity<MedicationDto> update(@Valid @RequestBody MedicationRequestDto request) throws BusinessErrorException {
         return ResponseEntity.ok().body(medicationService.updateMedication(request));
     }
 

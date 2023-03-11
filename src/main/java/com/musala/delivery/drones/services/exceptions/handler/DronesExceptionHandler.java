@@ -111,6 +111,19 @@ public class DronesExceptionHandler {
             );
         }
     }
+    @ExceptionHandler(BusinessErrorException.class)
+    public ResponseEntity<ErrorMessage> integrityViolation(BusinessErrorException ex) {
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    ErrorMessage.builder()
+                            .errorCode(HttpStatus.BAD_REQUEST)
+                            .date(LocalDateTime.now())
+                            .description("Bad request data")
+                            .message(ex.getMessage().split(":")[0])
+                            .build()
+            );
+        }
+    }
 }
 
 

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.musala.delivery.drones.entities.dto.SuccessMessage;
+import com.musala.delivery.drones.services.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.musala.delivery.drones.entities.dto.DroneDto;
 import com.musala.delivery.drones.entities.dto.DroneRequestDto;
-import com.musala.delivery.drones.services.exceptions.DroneAlreadyRegisteredException;
-import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.DroneService;
 
 import jakarta.validation.Valid;
@@ -38,7 +36,7 @@ public class DroneController {
 
 	@PostMapping("add")
 	private ResponseEntity<DroneDto> addDrone(@Valid @RequestBody DroneRequestDto request)
-			throws DroneAlreadyRegisteredException, InvalidRequestException {
+			throws DroneAlreadyRegisteredException, InvalidRequestException, BusinessErrorException {
 		return ResponseEntity.ok().body(droneService.registerDrone(request));
 	}
 
@@ -49,12 +47,12 @@ public class DroneController {
 	}
 
 	@PatchMapping("update")
-	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) {
+	private ResponseEntity<DroneDto> update(@Valid @RequestBody DroneRequestDto request) throws DroneAlreadyBusyException, ResourceNotFoundException, BusinessErrorException {
 		return ResponseEntity.ok().body(droneService.updateDrone(request));
 	}
 
 	@DeleteMapping("delete")
-	private ResponseEntity remove(@RequestParam("serialNumber") String serialNumber) {
+	private ResponseEntity remove(@RequestParam("serialNumber") String serialNumber) throws BusinessErrorException {
 		droneService.removeDrone(serialNumber);
 		return ResponseEntity.ok().body(
 				SuccessMessage.builder()

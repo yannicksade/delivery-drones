@@ -10,6 +10,7 @@ import com.musala.delivery.drones.entities.dto.DroneDto;
 import com.musala.delivery.drones.entities.dto.DroneRequestDto;
 import com.musala.delivery.drones.services.exceptions.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.musala.delivery.drones.entities.Drone;
@@ -46,7 +47,7 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public DroneDto registerDrone(DroneRequestDto request)
-            throws InvalidRequestException, DroneAlreadyRegisteredException {
+            throws InvalidRequestException, DroneAlreadyRegisteredException, BusinessErrorException {
         Optional<Drone> drone = droneRepository.findByModelAndSerialNumber(request.getModel(),
                 request.getSerialNumber());
         if (drone.isPresent()) {
@@ -54,16 +55,21 @@ public class DroneServiceImpl implements DroneService {
         }
         DroneDto droneDto = validateDrone(request);
         log.info("A drone with  serial number {} and model {} is saving ", request.getSerialNumber(), request.getModel());
-        return droneMapper.toDto(droneRepository.save(
-                Drone.builder()
-                        .id(new Random().nextLong(10, 100))
-                        .batteryLevel(100)
-                        .state(EStatus.IDLE)
-                        .model(droneDto.getModel())
-                        .weightLimit(droneDto.getWeightLimit())
-                        .serialNumber(droneDto.getSerialNumber())
-                        .build()
-        ));
+        try {
+            droneDto = droneMapper.toDto(droneRepository.save(
+                    Drone.builder()
+                            .id(new Random().nextLong(10, 100))
+                            .batteryLevel(100)
+                            .state(EStatus.IDLE)
+                            .model(droneDto.getModel())
+                            .weightLimit(droneDto.getWeightLimit())
+                            .serialNumber(droneDto.getSerialNumber())
+                            .build()
+            ));
+        } catch (DataAccessException ex) {
+            throw new BusinessErrorException("Drone identified by serialNumber may exists already - " + ex.getMostSpecificCause().getMessage());
+        }
+        return droneDto;
     }
 
     @Override
@@ -108,7 +114,7 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public DroneDto updateDrone(DroneRequestDto request) throws DroneAlreadyBusyException, ResourceNotFoundException {
+    public DroneDto updateDrone(DroneRequestDto request) throws DroneAlreadyBusyException, ResourceNotFoundException, BusinessErrorException {
         validateDrone(request);
         Drone drone = droneRepository.findBySerialNumber(request.getSerialNumber()).orElseThrow(() -> new ResourceNotFoundException("No drone with that serial nomber"));
         if (!drone.getState().equals(EStatus.IDLE)) throw new DroneAlreadyBusyException("Drone is Busy cannot update");
@@ -116,17 +122,27 @@ public class DroneServiceImpl implements DroneService {
             drone.setModel(request.getModel());
         if (!drone.getWeightLimit().equals(request.getWeightLimit()))
             drone.setWeightLimit(request.getWeightLimit());
+        try {
+            drone = droneRepository.save(drone);
+        } catch (DataAccessException ex) {
+            throw new BusinessErrorException("Drone identified by serialNumber - " + ex.getMostSpecificCause().getMessage());
+        }
         log.info("A drone with serial number {} is updated...", drone.getSerialNumber());
-        return droneMapper.toDto(droneRepository.save(drone));
-    }
+        return droneMapper.toDto(drone);
+}
 
     @Override
-    public void removeDrone(String serialNumber) throws DroneAlreadyBusyException {
+    public void removeDrone(String serialNumber) throws DroneAlreadyBusyException, BusinessErrorException {
         //remove only when not busy
-        if(droneRepository.checkState(serialNumber, EStatus.IDLE) == 0) throw new DroneAlreadyBusyException("Drone is Busy cannot be deleted ");
+        try {
+            if (droneRepository.checkState(serialNumber, EStatus.IDLE) == 0)
+                throw new DroneAlreadyBusyException("Drone is Busy cannot be deleted ");
 
-        droneRepository.delete(droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("Drone with serial Number not Exists")));
-        log.info("A drone with serial number {} is deleted...", serialNumber);
+            droneRepository.delete(droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("Drone with serial Number not Exists")));
+            log.info("A drone with serial number {} is deleted...", serialNumber);
+        } catch (DataAccessException ex) {
+            throw new BusinessErrorException("Drone identified by serialNumber - " + ex.getMostSpecificCause().getMessage());
+        }
     }
 
     @Override
