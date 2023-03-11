@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.entities.dto.DroneDto;
 import com.musala.delivery.drones.entities.dto.DroneRequestDto;
-import com.musala.delivery.drones.services.exceptions.*;
+import com.musala.delivery.drones.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;

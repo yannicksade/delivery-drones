@@ -10,7 +10,9 @@ import com.musala.delivery.drones.entities.Medication;
 @Mapper(componentModel = "spring")
 @Service
 public abstract class MedicationMapper {
-	public abstract Medication toEntity(MedicationRequestDto medicationDto);
-	
-	public abstract MedicationDto toDto(Medication medication);
+    public abstract Medication toEntity(MedicationRequestDto medicationDto);
+
+    public abstract MedicationDto toDto(Medication medication);
+
+    public abstract MedicationRequestDto toDto(MedicationDto medication);
 }

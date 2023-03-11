@@ -14,10 +14,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Builder
 public class ErrorMessage implements Serializable {
-	
-	private HttpStatus errorCode;
 	private String description;
 	private String message;
+	private HttpStatus errorCode;
 	LocalDateTime date;
 	
 }

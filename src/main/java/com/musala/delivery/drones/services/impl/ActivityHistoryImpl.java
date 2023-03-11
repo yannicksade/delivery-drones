@@ -4,7 +4,7 @@ import com.musala.delivery.drones.entities.dto.HistoryDto;
 import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.HistoryMapper;
 import com.musala.delivery.drones.repositories.ActivityHistoryRepository;
 import com.musala.delivery.drones.services.ActivityHistoryService;

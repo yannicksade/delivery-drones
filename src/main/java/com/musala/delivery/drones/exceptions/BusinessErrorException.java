@@ -1,4 +1,4 @@
-package com.musala.delivery.drones.services.exceptions;
+package com.musala.delivery.drones.exceptions;
 
 public class BusinessErrorException extends BusinessException{
     public BusinessErrorException(String message) {

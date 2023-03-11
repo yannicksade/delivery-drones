@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.musala.delivery.drones.entities.dto.SuccessMessage;
 import com.musala.delivery.drones.services.FileUploaderService;
-import com.musala.delivery.drones.services.exceptions.BusinessErrorException;
+import com.musala.delivery.drones.exceptions.BusinessErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.musala.delivery.drones.entities.dto.MedicationDto;
 import com.musala.delivery.drones.entities.dto.MedicationRequestDto;
-import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.services.exceptions.MedicationAlreadyRegisteredException;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.exceptions.InvalidRequestException;
+import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.MedicationService;
 
 import jakarta.validation.Valid;

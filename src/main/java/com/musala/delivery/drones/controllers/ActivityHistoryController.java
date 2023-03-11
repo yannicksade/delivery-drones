@@ -4,7 +4,7 @@ package com.musala.delivery.drones.controllers;
 import com.musala.delivery.drones.entities.dto.HistoryDto;
 import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.services.ActivityHistoryService;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

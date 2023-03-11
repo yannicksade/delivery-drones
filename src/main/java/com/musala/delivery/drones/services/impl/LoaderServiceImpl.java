@@ -1,22 +1,24 @@
 package com.musala.delivery.drones.services.impl;
 
-import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
-import com.musala.delivery.drones.entities.dto.LoadRequest;
 import com.musala.delivery.drones.entities.dto.LoadRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.entities.Medication;
+import com.musala.delivery.drones.entities.dto.MedicationDto;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.mappers.LoadMapper;
+import com.musala.delivery.drones.exceptions.*;
+import com.musala.delivery.drones.mappers.MedicationMapper;
 import com.musala.delivery.drones.services.ActivityHistoryService;
 import com.musala.delivery.drones.services.DroneService;
 import com.musala.delivery.drones.services.LoaderService;
-import com.musala.delivery.drones.services.exceptions.*;
+import com.musala.delivery.drones.services.MedicationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,7 +29,10 @@ public class LoaderServiceImpl implements LoaderService {
     private final DroneService droneService;
 
     private final ActivityHistoryService activityHistoryService;
-    private final LoadMapper loadMapper;
+
+    private final MedicationService medicationService;
+
+    private final MedicationMapper medicationMapper;
 
     @Override
     public Integer loadDrone(Long droneId, LoadRequestDto loadRequest) throws ResourceNotFoundException, DroneAlreadyBusyException, DroneOverloadException {
@@ -35,7 +40,7 @@ public class LoaderServiceImpl implements LoaderService {
     }
 
     private Integer saveLoads(Drone drone, LoadRequestDto loadRequestDto) throws DroneAlreadyBusyException, DroneOverloadException, LowBatteryException, InvalidRequestException {
-        LoadRequest load = loadMapper.toLoad(loadRequestDto);
+        log.info("Loading for the drone {} started", drone.getId());
         if (!drone.getState().equals(EStatus.IDLE)) {
             throw new DroneAlreadyBusyException("Done is working already");
         }
@@ -43,31 +48,43 @@ public class LoaderServiceImpl implements LoaderService {
             throw new LowBatteryException("Done battery is very low");
         }
         double weight = 0.0d;
-        if (load.getMedications() != null) {
-            weight = load.getMedications().stream().map(Medication::getWeight).reduce(0.0f, Float::sum);
-        }
-        System.out.println(">>>>>>>>>>>>>>>>>>>: " + loadRequestDto.getMedicationId());
-        if (load.getMedication() != null) {
-            weight += load.getMedication().getWeight();
-        }
+        MedicationDto medicationDto = medicationService.getMedicationByCode(loadRequestDto.getMedicationCode());
+        weight += medicationDto.getWeight();
+        List<MedicationDto> medicationDtoList = new ArrayList<>();
+        medicationDtoList.add(medicationDto);
+        weight += loadRequestDto.getMedicationCodeList().stream().map(e -> {
+            MedicationDto dto = medicationService.getMedicationByCode(e);
+            medicationDtoList.add(dto);
+            return dto;
+        }).map(MedicationDto::getWeight).reduce(0.0f, Float::sum);
+        log.info("Total load weight estimated: {} gramme(s)", weight);
         Double droneWeight = droneService.checkDroneLoad(Optional.ofNullable(drone));
         if (weight > droneWeight) {
             throw new DroneOverloadException("Done is Overloaded, load weight is too heavy");
         }
-        if (null != load.getMedication()) {
-            drone.getMedications().add(load.getMedication());
-        }
-        if (null != load.getMedications() && load.getMedications().size() > 0) {
-            load.getMedications().forEach(e -> drone.getMedications().add(e));
-        }
+        log.info("validating the origin and destination");
         validateHistoryActivityData(loadRequestDto);
-        drone.getMedications().forEach(medication -> saveActivityHistory(drone, medication, loadRequestDto));
+        medicationDtoList.forEach(dto -> {
+            Medication medication = medicationMapper.toEntity(medicationMapper.toDto(dto));
+            drone.getMedications().add(valiadte(medication));
+            saveActivityHistory(drone, medication, loadRequestDto);
+        });
+
         drone.setState(EStatus.LOADING);
-        log.info("A drone with ID {} is in LOADING", drone.getId());
-        return droneService.save(drone).getMedications().size();
+        log.info("The drone with ID {} finished LOADING, final added weight is {} gramme(s)", weight);
+        droneService.save(drone);
+        return medicationService.getAllMedicationsByDrone(drone.getId()).size();
     }
 
-    private void saveActivityHistory(Drone drone, Medication medication, HistoryRequestDto loadRequestDto) throws InvalidRequestException {
+    private Medication valiadte(Medication medication) throws MedicationLoadedAlreadyException {
+        if (medicationService.checkIfMedicationIsLoadedOrDelivered(medication.getCode())) {
+            throw new MedicationLoadedAlreadyException("Cannot be loaded");
+        }
+        //the medication must not be in to another drone already
+        return medication;
+    }
+
+    private void saveActivityHistory(Drone drone, Medication medication, LoadRequestDto loadRequestDto) throws InvalidRequestException {
         ActivityHistory history = activityHistoryService.createHistory(
                 ActivityHistory.builder()
                         .historyState(EStatus.DELIVERING)

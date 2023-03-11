@@ -16,8 +16,8 @@ import java.time.LocalDateTime;
 public class SuccessMessage implements Serializable {
 	
 	private HttpStatus code;
-	private String description;
 	private String message;
+	private String description;
 	LocalDateTime date;
 	private Object value;
 	

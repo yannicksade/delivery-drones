@@ -2,7 +2,7 @@ package com.musala.delivery.drones.controllers;
 
 import com.musala.delivery.drones.entities.dto.LoadRequestDto;
 import com.musala.delivery.drones.entities.dto.SuccessMessage;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.services.LoaderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class LoaderController {
     private final LoaderService loaderService;
 
-    @PostMapping("load/{droneId}")
+    @PostMapping("load/drone/{droneId}")
     private ResponseEntity<SuccessMessage> loadDrone(@PathVariable("droneId") Long id, @Valid() @RequestBody LoadRequestDto request) throws ResourceNotFoundException, HttpMessageNotReadableException {
         return ResponseEntity.ok().body(
                 SuccessMessage.builder()

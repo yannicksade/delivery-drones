@@ -1,18 +1,17 @@
-package com.musala.delivery.drones.services.exceptions.handler;
+package com.musala.delivery.drones.exceptions.handler;
 
 import com.musala.delivery.drones.entities.dto.ErrorMessage;
 
 import java.time.LocalDateTime;
 
-import com.musala.delivery.drones.services.exceptions.*;
+import com.musala.delivery.drones.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class DronesExceptionHandler {
+public class BusinessExceptionHandler {
 
     @ExceptionHandler(InvalidRequestException.class)
     public ResponseEntity<ErrorMessage> handleInvalidDataException(InvalidRequestException ex) {
@@ -20,8 +19,8 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.BAD_REQUEST)
                         .date(LocalDateTime.now())
-                        .description("Invalid request data")
-                        .message(ex.getMessage())
+                        .message("Invalid request data")
+                        .description(ex.getMessage())
                         .build()
         );
     }
@@ -32,8 +31,8 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.NOT_ACCEPTABLE)
                         .date(LocalDateTime.now())
-                        .description("Similar Drone exists already")
-                        .message(ex.getMessage())
+                        .message("Similar Drone exists already")
+                        .description(ex.getMessage())
                         .build()
         );
     }
@@ -44,8 +43,8 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.NOT_ACCEPTABLE)
                         .date(LocalDateTime.now())
-                        .description("Similar Medication exists already")
-                        .message(ex.getMessage())
+                        .message("Similar Medication exists")
+                        .description(ex.getMessage())
                         .build()
         );
     }
@@ -56,8 +55,8 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.NOT_FOUND)
                         .date(LocalDateTime.now())
-                        .description("No Data found")
-                        .message(ex.getMessage())
+                        .message("No data resource found")
+                        .description(ex.getMessage())
                         .build()
         );
     }
@@ -68,8 +67,8 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED)
                         .date(LocalDateTime.now())
-                        .description("Drone Battery is low")
-                        .message(ex.getMessage())
+                        .message("Drone Battery is low")
+                        .description(ex.getMessage())
                         .build()
         );
     }
@@ -80,8 +79,8 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.NOT_ACCEPTABLE)
                         .date(LocalDateTime.now())
-                        .description("Drone capacity exceeded")
-                        .message(ex.getMessage())
+                        .message("Drone capacity exceeded")
+                        .description(ex.getMessage())
                         .build()
         );
     }
@@ -92,34 +91,21 @@ public class DronesExceptionHandler {
                 ErrorMessage.builder()
                         .errorCode(HttpStatus.BAD_REQUEST)
                         .date(LocalDateTime.now())
-                        .description("Drone is already Busy")
-                        .message(ex.getMessage())
+                        .message("Drone Busy")
+                        .description(ex.getMessage())
                         .build()
         );
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorMessage> methodArgumentNotValid(HttpMessageNotReadableException ex) {
+    @ExceptionHandler(MedicationLoadedAlreadyException.class)
+    public ResponseEntity<ErrorMessage> loadedAlready(MedicationLoadedAlreadyException ex) {
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     ErrorMessage.builder()
                             .errorCode(HttpStatus.BAD_REQUEST)
                             .date(LocalDateTime.now())
-                            .description("Bad request data")
-                            .message(ex.getMessage().split(":")[0])
-                            .build()
-            );
-        }
-    }
-    @ExceptionHandler(BusinessErrorException.class)
-    public ResponseEntity<ErrorMessage> integrityViolation(BusinessErrorException ex) {
-        {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    ErrorMessage.builder()
-                            .errorCode(HttpStatus.BAD_REQUEST)
-                            .date(LocalDateTime.now())
-                            .description("Bad request data")
-                            .message(ex.getMessage().split(":")[0])
+                            .message("Medication Loaded Already")
+                            .description(ex.getMessage())
                             .build()
             );
         }

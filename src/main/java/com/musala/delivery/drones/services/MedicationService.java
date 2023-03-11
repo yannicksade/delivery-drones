@@ -2,12 +2,13 @@ package com.musala.delivery.drones.services;
 
 import java.util.List;
 
+import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.entities.dto.MedicationDto;
 import com.musala.delivery.drones.entities.dto.MedicationRequestDto;
-import com.musala.delivery.drones.services.exceptions.BusinessErrorException;
-import com.musala.delivery.drones.services.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.services.exceptions.MedicationAlreadyRegisteredException;
-import com.musala.delivery.drones.services.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.exceptions.BusinessErrorException;
+import com.musala.delivery.drones.exceptions.InvalidRequestException;
+import com.musala.delivery.drones.exceptions.MedicationAlreadyRegisteredException;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface MedicationService {
@@ -25,4 +26,6 @@ public interface MedicationService {
 	void removeMedication(String code) throws BusinessErrorException;
 
     MedicationDto updatedImage(String code, MultipartFile multiPartFile) throws BusinessErrorException;
+
+	boolean checkIfMedicationIsLoadedOrDelivered(String medicationCode);
 }

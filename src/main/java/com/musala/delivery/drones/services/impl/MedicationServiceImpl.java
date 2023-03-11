@@ -5,8 +5,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.musala.delivery.drones.enumerations.EStatus;
+import com.musala.delivery.drones.exceptions.*;
 import com.musala.delivery.drones.services.FileUploaderService;
-import com.musala.delivery.drones.services.exceptions.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -101,7 +101,7 @@ public class MedicationServiceImpl implements MedicationService {
     @Override
     public void removeMedication(String code) throws BusinessErrorException {
         //remove only when drone not delivering yet
-        if (medicationRepository.checkIfLoaded(code, EStatus.LOADING.getCode(), EStatus.LOADED.getCode()) != 1)
+        if (medicationRepository.checkIfLoaded(code, new Integer[]{EStatus.LOADING.getCode(), EStatus.LOADED.getCode()}) != 1)
             throw new DroneAlreadyBusyException("Medication cannot be remove, it is being delivering");
         try {
             medicationRepository.delete(medicationRepository.findByCode(code).orElseThrow(() -> new ResourceNotFoundException("Medication with code not exists")));
@@ -118,5 +118,10 @@ public class MedicationServiceImpl implements MedicationService {
         medication.setImage(filename);
         log.info("image file of medication Code: {} stored and renamed to {} successfully", code, filename);
         return medicationMapper.toDto(medicationRepository.save(medication));
+    }
+
+    @Override
+    public boolean checkIfMedicationIsLoadedOrDelivered(String code) {
+        return medicationRepository.checkIfLoadedOrDelivered(code) != 0;
     }
 }

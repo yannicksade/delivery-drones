@@ -6,11 +6,10 @@ import lombok.*;
 
 @Data
 @Builder
-public class DroneRequestDto extends LoadRequest {
-	private String serialNumber;
-
-	private EModel model;
-
-	private float weightLimit;
+@AllArgsConstructor
+public class DroneRequestDto {
+    private String serialNumber;
+    private EModel model;
+    private float weightLimit;
 
 }

@@ -1,7 +1,5 @@
-package com.musala.delivery.drones.services.exceptions;
+package com.musala.delivery.drones.exceptions;
 
-
-import java.util.function.Supplier;
 
 @SuppressWarnings("serial")
 public class ResourceNotFoundException extends BusinessException {

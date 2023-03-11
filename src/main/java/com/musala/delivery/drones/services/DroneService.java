@@ -7,7 +7,7 @@ import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.entities.dto.DroneDto;
 import com.musala.delivery.drones.entities.dto.DroneRequestDto;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.services.exceptions.*;
+import com.musala.delivery.drones.exceptions.*;
 
 public interface DroneService {
 
