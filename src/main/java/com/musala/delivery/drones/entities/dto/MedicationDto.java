@@ -11,7 +11,7 @@ public class MedicationDto {
 
 	private String name;
 
-	private float weight;
+	private Double weight;
 
 	private String image;
 	

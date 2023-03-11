@@ -31,8 +31,8 @@ public class DroneServiceImpl implements DroneService {
     private final DroneMapper droneMapper;
 
     @Override
-    public Drone findById(long id) throws ResourceNotFoundException {
-        return droneRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No Drone details Found"));
+    public Drone findBySerialNumber(String serialNumber) throws ResourceNotFoundException {
+        return droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("No Drone details Found"));
     }
 
     @Override
@@ -96,21 +96,8 @@ public class DroneServiceImpl implements DroneService {
                     "A drone total weight must be greater than 0 and lesser than 500 grammes");
         }
         Optional<Drone> drone = droneRepository.findByModelAndSerialNumber(request.getModel(), request.getSerialNumber());
-        if (checkDroneLoad(drone) > 500.0d) {
 
-            throw new DroneOverloadException("Drone weight limit is reached");
-        }
         return droneMapper.toDto(droneMapper.toEntity(request));
-    }
-
-    @Override
-    public Double checkDroneLoad(Optional<Drone> drone) {
-        if (!drone.isPresent()) {
-            return 0.0d;
-        }
-        float totalWeight = drone.get().getMedications().stream().map(Medication::getWeight).reduce(0.0f, Float::sum);
-
-        return Double.valueOf(totalWeight);
     }
 
     @Override
@@ -129,7 +116,7 @@ public class DroneServiceImpl implements DroneService {
         }
         log.info("A drone with serial number {} is updated...", drone.getSerialNumber());
         return droneMapper.toDto(drone);
-}
+    }
 
     @Override
     public void removeDrone(String serialNumber) throws DroneAlreadyBusyException, BusinessErrorException {

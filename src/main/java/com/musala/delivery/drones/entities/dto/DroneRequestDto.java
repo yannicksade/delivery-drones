@@ -10,6 +10,6 @@ import lombok.*;
 public class DroneRequestDto {
     private String serialNumber;
     private EModel model;
-    private float weightLimit;
+    private Double weightLimit;
 
 }

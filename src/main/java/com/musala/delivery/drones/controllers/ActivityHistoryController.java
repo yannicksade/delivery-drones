@@ -30,13 +30,13 @@ public class ActivityHistoryController {
         return ResponseEntity.ok().body(historyService.getHistories(request));
     }
 
-    @GetMapping("drone/all/{id}")
-    private ResponseEntity<List<HistoryDto>> searchAllByDrone(@Valid @RequestBody HistoryRequestDto request, @Valid  @PathVariable("id") long id) throws HttpMessageNotReadableException {
-        return ResponseEntity.ok().body(historyService.getHistoriesByDrone(id, request));
+    @GetMapping("drone/all/{serialNumber}")
+    private ResponseEntity<List<HistoryDto>> searchAllByDrone(@Valid @RequestBody HistoryRequestDto request, @Valid  @PathVariable("serialNumber") String serialNumber) throws HttpMessageNotReadableException {
+        return ResponseEntity.ok().body(historyService.getHistoriesByDrone(serialNumber, request));
     }
 
-    @GetMapping(value = "medication/all/{id}", consumes = "application/json")
-    private ResponseEntity<List<HistoryDto>> searchAllByMedication(@Valid @RequestBody HistoryRequestDto request, @PathVariable("id") long id) throws HttpMessageNotReadableException {
-        return ResponseEntity.ok().body(historyService.getHistoriesByMedication(id, request));
+    @GetMapping(value = "medication/all/{code}")
+    private ResponseEntity<List<HistoryDto>> searchAllByMedication(@Valid @RequestBody HistoryRequestDto request, @PathVariable("code") String code) throws HttpMessageNotReadableException {
+        return ResponseEntity.ok().body(historyService.getHistoriesByMedication(code, request));
     }
 }

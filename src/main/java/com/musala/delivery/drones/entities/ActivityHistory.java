@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Entity
 @EqualsAndHashCode
 @Table(name = "MS_DL_DRONE_HISTORY")
-@SequenceGenerator(name = "SeqHistory", sequenceName = "SeqHistory", initialValue = 1, allocationSize = 1)
+//@SequenceGenerator(name = "SeqHistory", sequenceName = "SeqHistory", initialValue = 1, allocationSize = 1)
 public class ActivityHistory {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SeqHistory")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SeqHistory")
     private Long id;
 
     @Column(name = "ORIGIN_LOCATION")

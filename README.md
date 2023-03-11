@@ -58,27 +58,29 @@ While implementing your solution **please take care of the following requirement
 * upload image medication file and rename it randomly 
 * CRUD Apis 
 * Validate non-functional behaviors
+* Auto discharging drones
 
-#### Cron jobs
+## Cron jobs
 * Check drones battery level every 1 min
 * Every 2 mins move the drone state from ```LOADED,
   DELIVERING,
   DELIVERED,
   RETURNING,IDLE``` to simulate finishing the drone trip
 
-#### API Docs 
+## API Docs 
  - SWAGGER URL: http://127.0.0.1:8050/api/v1/swagger-ui/index.html#
 #### RUN
-## 1- Java -jar drones.jar # run IN-MEMORY database
-## 2.1- pull dock image from registry
-## 2.1- Run docker run --d --name drone:last
-#### OPERATE
+### 1- Java -jar drones.jar # run IN-MEMORY database
+### 2.1- pull dock image from registry
+### 2.1- Run docker run --d --name drone:last
+### OPERATE
 ##### Step 1: Register drones
 ##### Step 2: create medications on the system
 ##### Step 3: load drone with medications
-###### Step 3-1: provide each medication valid data
-###### Step 3-2: provide data about the origin and destination
-###### finally "SUBMIT". the drone is leaving... Congrats!!!
+##### Step 3-1: provide each medication valid data
+##### Step 3-2: provide data about the origin and destination
+##### step 4: Check histories
+##### finally "SUBMIT". the drone is leaving... Congrats!!!
 
 that's all!!
 :scroll: **END** 

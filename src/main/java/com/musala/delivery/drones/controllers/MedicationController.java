@@ -37,8 +37,8 @@ public class MedicationController {
         return ResponseEntity.ok().body(medicationService.getMedicationByCode(code));
     }
 
-    @GetMapping("allMedicationsByDrone/{droneId}")
-    private ResponseEntity<List<MedicationDto>> getDroneMedications(@PathVariable("droneId") Long droneId) {
+    @GetMapping("allMedicationsByDrone/{serialNumber}")
+    private ResponseEntity<List<MedicationDto>> getDroneMedications(@PathVariable("serialNumber") String droneId) {
         return ResponseEntity.ok().body(medicationService.getAllMedicationsByDrone(droneId));
     }
 

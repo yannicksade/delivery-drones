@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MedicationService {
 	
-	List<MedicationDto> getAllMedicationsByDrone(long droneId);
+	List<MedicationDto> getAllMedicationsByDrone(String droneId);
 	
 	MedicationDto createMedication(MedicationRequestDto request) throws InvalidRequestException, MedicationAlreadyRegisteredException, BusinessErrorException;
 	
@@ -28,4 +28,6 @@ public interface MedicationService {
     MedicationDto updatedImage(String code, MultipartFile multiPartFile) throws BusinessErrorException;
 
 	boolean checkIfMedicationIsLoadedOrDelivered(String medicationCode);
+
+    Medication findByCode(String code);
 }

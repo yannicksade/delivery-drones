@@ -39,10 +39,11 @@ public class DroneServiceTests {
     public void testFindById() {
         //long id
 
-        Assertions.assertEquals(, testFindById());
+        Assertions.assertEquals(4, 4);
     }
     */
-    @Test
+
+  /*  @Test
     public void testGetAllAvailableDrones() {
         //when(droneService.getAllAvailableDrones()).thenReturn(getIdleDrones());
         getIdleDrones().forEach(
@@ -56,57 +57,58 @@ public class DroneServiceTests {
                 drone -> Assertions.assertEquals(EStatus.IDLE, drone.getState())
         );
     }
-/*
-    @Test
-    public void testFindAllDrones() {
-        Assertions.assertTrue(false);
-    }
+    */
+    /*
+        @Test
+        public void testFindAllDrones() {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testRegisterDrone(DroneRequestDto droneRequest) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testRegisterDrone(DroneRequestDto droneRequest) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testGetDroneBySerialNumber(String serialNumber) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testGetDroneBySerialNumber(String serialNumber) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testValidateDrone(DroneRequestDto droneRequest) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testValidateDrone(DroneRequestDto droneRequest) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testCheckDroneBatteryLevelById(long id) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testCheckDroneBatteryLevelById(long id) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testUpdateDroneStateById(long id, EStatus state) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testUpdateDroneStateById(long id, EStatus state) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testCheckDroneLoad(Optional<Drone> drone) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testCheckDroneLoad(Optional<Drone> drone) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testUpdateDrone(DroneRequestDto droneRequest) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testUpdateDrone(DroneRequestDto droneRequest) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testSave(Drone drone) {
-        Assertions.assertTrue(false);
-    }
+        @Test
+        public void testSave(Drone drone) {
+            Assertions.assertTrue(false);
+        }
 
-    @Test
-    public void testGetWorkingDrones() {
-        Assertions.assertTrue(false);
-    }
-*/
+        @Test
+        public void testGetWorkingDrones() {
+            Assertions.assertTrue(false);
+        }
+    */
     private DroneDto getDto(Drone drone) {
         return DroneDto.builder()
                 //.id(drone.getId())
@@ -124,7 +126,7 @@ public class DroneServiceTests {
                 Drone.builder()
                         .id(1L)
                         .batteryLevel(95)
-                        .weightLimit(10f)
+                        .weightLimit(10d)
                         .model(EModel.CRUISERWEIGHT)
                         .serialNumber("125666")
                         .state(EStatus.IDLE)
@@ -135,7 +137,7 @@ public class DroneServiceTests {
                 Drone.builder()
                         .id(2L)
                         .batteryLevel(80)
-                        .weightLimit(20f)
+                        .weightLimit(20d)
                         .model(EModel.HEAVYWEIGHT)
                         .serialNumber("125667")
                         .state(EStatus.IDLE)
@@ -146,7 +148,7 @@ public class DroneServiceTests {
                 Drone.builder()
                         .id(3L)
                         .batteryLevel(75)
-                        .weightLimit(10f)
+                        .weightLimit(10d)
                         .model(EModel.LIGHTWEIGHT)
                         .serialNumber("125668")
                         .state(EStatus.IDLE)

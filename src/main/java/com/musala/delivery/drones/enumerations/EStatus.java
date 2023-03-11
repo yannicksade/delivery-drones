@@ -3,7 +3,7 @@ package com.musala.delivery.drones.enumerations;
 public enum EStatus {
     IDLE(0), LOADING(1), LOADED(2), DELIVERING(3), DELIVERED(4), RETURNING(5);
 
-    public int code;
+    int code;
 
     EStatus(int code) {
         this.code = code;

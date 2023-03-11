@@ -51,9 +51,9 @@ public class Drone {
     @Max(500)
     @Min(0)
     @Column(name = "WEIGHT_LIMIT",  precision = 3)
-    private Float weightLimit;
+    private Double weightLimit;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "DRONE_ID")
     private Set<Medication> medications = new HashSet<>();
 }

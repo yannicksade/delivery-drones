@@ -12,9 +12,9 @@ public interface ActivityHistoryService {
 
    List<HistoryDto> getHistories(HistoryRequestDto requestDto);
 
-    List<HistoryDto> getHistoriesByDrone(long droneID, HistoryRequestDto requestDto);
+    List<HistoryDto> getHistoriesByDrone(String droneID, HistoryRequestDto requestDto);
 
-    List<HistoryDto> getHistoriesByMedication(long medicationID, HistoryRequestDto requestDto);
+    List<HistoryDto> getHistoriesByMedication(String medicationID, HistoryRequestDto requestDto);
 
     void updateActivityState(long id, EStatus status);
 

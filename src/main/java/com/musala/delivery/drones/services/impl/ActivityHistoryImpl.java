@@ -35,19 +35,19 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
 
     @Override
     public List<HistoryDto> getHistories(HistoryRequestDto requestDto) {
-        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, null, -1)).getResultList()).orElse(new ArrayList<>())
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, null, null)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<HistoryDto> getHistoriesByDrone(long droneID, HistoryRequestDto requestDto) {
-        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "drone", droneID)).getResultList()).orElse(new ArrayList<>())
+    public List<HistoryDto> getHistoriesByDrone(String serialNumber, HistoryRequestDto requestDto) {
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "drone", serialNumber)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<HistoryDto> getHistoriesByMedication(long medicationID, HistoryRequestDto requestDto) {
-        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()).orElse(new ArrayList<>())
+    public List<HistoryDto> getHistoriesByMedication(String code, HistoryRequestDto requestDto) {
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "medication", code)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
@@ -66,18 +66,18 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
         return historyMapper.toDto(historyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("no history details with that ID")));
     }
 
-    private CriteriaQuery<ActivityHistory> getCriteria(HistoryRequestDto requestDto, String field, long id) {
+    private CriteriaQuery<ActivityHistory> getCriteria(HistoryRequestDto requestDto, String field, String key) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ActivityHistory> query = cb.createQuery(ActivityHistory.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<ActivityHistory> history = query.from(ActivityHistory.class);
         if ("drone".equals(field)) {
             Join<Object, Object> root = history.join("drone", JoinType.INNER);
-            predicates.add(cb.equal(root.get("id"), id));
+            predicates.add(cb.equal(root.get("serialNumber"), key));
         }
         if ("medication".equals(field)) {
             Join<Object, Object> drone = history.join("medication", JoinType.INNER);
-            predicates.add(cb.equal(drone.get("id"), id));
+            predicates.add(cb.equal(drone.get("code"), key));
         }
         LocalDateTime start = LocalDateTime.now().minusDays(1);
         LocalDateTime end = LocalDateTime.now();

@@ -1,6 +1,7 @@
 package com.musala.delivery.drones.services.impl;
 
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ public class MedicationServiceImpl implements MedicationService {
     private final FileUploaderService fileUploaderService;
 
     @Override
-    public List<MedicationDto> getAllMedicationsByDrone(long droneId) {
+    public List<MedicationDto> getAllMedicationsByDrone(String serialNumber) {
         return medicationRepository.findAll().stream().map(medicationMapper::toDto).collect(Collectors.toList());
     }
 
@@ -44,7 +45,7 @@ public class MedicationServiceImpl implements MedicationService {
         try {
             medicationDto = medicationMapper.toDto(medicationRepository.save(
                     Medication.builder()
-                            //.id(new Random().nextLong(10, 100))
+                            .id(new Random().nextLong(10, 100))
                             .code(medicationDto.getCode())
                             .name(medicationDto.getName())
                             .weight(medicationDto.getWeight())
@@ -82,9 +83,6 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     public MedicationDto validateMedication(MedicationRequestDto request) throws InvalidRequestException {
-        if (request.equals(null)) {
-            throw new InvalidRequestException("Invalid data: " + null);
-        }
         if (request.getName().isBlank()) {
             throw new InvalidRequestException("Medication Name is required");
         } else if (!Pattern.matches("^[A-Za-z0-9-_]+$", request.getName())) {
@@ -122,6 +120,11 @@ public class MedicationServiceImpl implements MedicationService {
 
     @Override
     public boolean checkIfMedicationIsLoadedOrDelivered(String code) {
-        return medicationRepository.checkIfLoadedOrDelivered(code) != 0;
+        return medicationRepository.checkIfLoadedOrIsInState(code) != 0;
+    }
+
+    @Override
+    public Medication findByCode(String code) {
+        return medicationRepository.findByCode(code).orElseThrow(() -> new ResourceNotFoundException("medication not found with code"+ code));
     }
 }

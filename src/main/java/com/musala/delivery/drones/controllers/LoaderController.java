@@ -19,13 +19,13 @@ import java.time.LocalDateTime;
 public class LoaderController {
     private final LoaderService loaderService;
 
-    @PostMapping("load/drone/{droneId}")
-    private ResponseEntity<SuccessMessage> loadDrone(@PathVariable("droneId") Long id, @Valid() @RequestBody LoadRequestDto request) throws ResourceNotFoundException, HttpMessageNotReadableException {
+    @PostMapping("load/drone/{serialNumber}")
+    private ResponseEntity<SuccessMessage> loadDrone(@PathVariable("serialNumber") String serialNumber, @Valid() @RequestBody LoadRequestDto request) throws ResourceNotFoundException, HttpMessageNotReadableException {
         return ResponseEntity.ok().body(
                 SuccessMessage.builder()
                         .code(HttpStatus.OK)
                         .message("Load quantity")
-                        .value(loaderService.loadDrone(id, request) + " item(s) loaded")
+                        .value(loaderService.loadDrone(serialNumber, request) + " item(s) loaded")
                         .description("show the number of item loaded in the drone")
                         .date(LocalDateTime.now())
                         .build());

@@ -39,10 +39,9 @@ public class Medication {
     @NotBlank
     private String name;
 
-    @Max(500)
     @Min(0)
     @Column(name = "WEIGHT",  precision = 3)
-    private Float weight;
+    private Double weight;
 
     @Column(name = "IMAGE_FILENAME")
     private String image;
@@ -50,9 +49,4 @@ public class Medication {
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEDICATION_ID")
     private List<ActivityHistory> histories = new ArrayList<>();
-
-    public Medication(String name) {
-    	this.name = name;
-    	
-    }
 }

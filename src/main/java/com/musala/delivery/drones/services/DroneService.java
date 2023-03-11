@@ -11,7 +11,7 @@ import com.musala.delivery.drones.exceptions.*;
 
 public interface DroneService {
 
-    Drone findById(long id);
+    Drone findBySerialNumber(String serialNumber);
     List<DroneDto> getAllAvailableDrones();
     List<Drone> findAllDrones();
     DroneDto registerDrone(DroneRequestDto droneRequest) throws InvalidRequestException, DroneAlreadyRegisteredException, BusinessErrorException;
@@ -23,8 +23,6 @@ public interface DroneService {
     float checkDroneBatteryLevelById(long id) throws ResourceNotFoundException;
 
     void updateDroneStateById(long id, EStatus state);
-
-    Double checkDroneLoad(Optional<Drone> drone);
 
     DroneDto updateDrone(DroneRequestDto droneRequest) throws DroneAlreadyBusyException, ResourceNotFoundException,BusinessErrorException;
 

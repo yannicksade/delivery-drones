@@ -29,11 +29,11 @@ public class LoadDeliveringJob {
 
         drones.stream().forEach(
                 drone -> {
-                    HistoryDto activityHistory = activityHistoryService.getHistoriesByDrone(drone.getId(), HistoryRequestDto.builder().historyState(EStatus.DELIVERING).build())
+                    HistoryDto activityHistory = activityHistoryService.getHistoriesByDrone(drone.getSerialNumber(), HistoryRequestDto.builder().historyState(EStatus.DELIVERING).build())
                             .stream().findAny().orElse(null);
                     log.info("Activity found on Drone identified by ID {} in {} state", drone.getId(), drone.getState());
                     if (activityHistory != null)
-                      switch (drone.getState()) {
+                        switch (drone.getState()) {
                             case LOADING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.LOADED);
                                 log.info("A drone with ID {} is in DELIVERING state", drone.getId());
@@ -41,8 +41,7 @@ public class LoadDeliveringJob {
                                 log.info("Activity history identified By {} changed state from LOADED to DELIVERING", activityHistory.getId());
                             }
                             case LOADED -> {
-
-                                log.info("A drone with ID {} is loaded, total load {}g ", drone.getId(), droneService.checkDroneLoad(Optional.of(drone)));
+                                log.info("A drone with ID {} is loaded", drone.getId());
                                 droneService.updateDroneStateById(drone.getId(), EStatus.DELIVERING);
                                 log.info("A drone with ID {} changed state from LOADED to DELIVERING", drone.getId());
                             }
@@ -57,7 +56,7 @@ public class LoadDeliveringJob {
                                 log.info("A drone with ID {} changed state from DELIVERED  to RETURNING", drone.getId());
                                 drone.setMedications(new HashSet<>());
                                 drone = droneService.save(drone);
-                                log.info("A drone with ID {} is unloaded, remaining load {}g ", drone.getId(), droneService.checkDroneLoad(Optional.of(drone)));
+                                log.info("A drone with ID {} is discharged and mission completed", drone.getId());
                             }
                             case RETURNING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.IDLE);

@@ -17,5 +17,5 @@ public class DroneDto {
 
 	private EStatus state;
 
-	private Float weightLimit;
+	private Double weightLimit;
 }
