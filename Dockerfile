@@ -6,6 +6,6 @@ RUN mvn -f ./pom.xml clean package
 COPY src ./src
 
 FROM openjdk:17-slim
-COPY --from=build  target/*.jar /usr/local/lib/drones.jar
+COPY --from=build  target/delivery-drones-console.jar /usr/local/lib/drones.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/drones.jar"]

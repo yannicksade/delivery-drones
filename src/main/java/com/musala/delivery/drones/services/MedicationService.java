@@ -3,6 +3,7 @@ package com.musala.delivery.drones.services;
 import java.util.List;
 
 import com.musala.delivery.drones.entities.Medication;
+import com.musala.delivery.drones.entities.dto.DroneRequestDto;
 import com.musala.delivery.drones.entities.dto.MedicationDto;
 import com.musala.delivery.drones.entities.dto.MedicationRequestDto;
 import com.musala.delivery.drones.exceptions.BusinessErrorException;
@@ -30,4 +31,6 @@ public interface MedicationService {
 	boolean checkIfMedicationIsLoadedOrDelivered(String medicationCode);
 
     Medication findByCode(String code);
+
+    List<MedicationDto> listAllMedications(MedicationRequestDto request);
 }

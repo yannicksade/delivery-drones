@@ -30,4 +30,17 @@ public class LoaderController {
                         .date(LocalDateTime.now())
                         .build());
     }
+
+    @GetMapping("check/load/{serialNumber}")
+    public ResponseEntity<SuccessMessage> checkDroneLoad(@PathVariable("serialNumber") String serialNumber) {
+        return ResponseEntity.ok().body(
+                SuccessMessage.builder()
+                        .code(HttpStatus.OK)
+                        .message("Checking Drone Load")
+                        .value(loaderService.checkDroneLoad(serialNumber) + " gramme(s)")
+                        .description("show total weight of drone")
+                        .date(LocalDateTime.now())
+                        .build()
+        );
+    }
 }

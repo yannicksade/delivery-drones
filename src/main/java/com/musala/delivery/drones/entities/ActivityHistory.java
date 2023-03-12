@@ -4,6 +4,7 @@ import com.musala.delivery.drones.enumerations.EStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @EqualsAndHashCode
+@Validated
 @Table(name = "MS_DL_DRONE_HISTORY")
 //@SequenceGenerator(name = "SeqHistory", sequenceName = "SeqHistory", initialValue = 1, allocationSize = 1)
 public class ActivityHistory {
@@ -37,10 +39,10 @@ public class ActivityHistory {
     private LocalDateTime startedAt;//
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DRONE_ID", referencedColumnName = "id")
+    @JoinColumn(name = "DRONE_ID")
     private Drone drone;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEDICATION_ID", referencedColumnName = "id")
+    @JoinColumn(name = "MEDICATION_ID")
     private Medication medication;
 }

@@ -38,7 +38,7 @@ public class LoaderServiceImpl implements LoaderService {
     }
 
     private Integer saveLoads(Drone drone, LoadRequestDto loadRequestDto) throws DroneAlreadyBusyException, DroneOverloadException, LowBatteryException, InvalidRequestException {
-        log.info("Loading for the drone {} started", drone.getId());
+        log.info("Loading started for the drone #{}...", drone.getId());
         if (!drone.getState().equals(EStatus.IDLE)) {
             throw new DroneAlreadyBusyException("Drone is working already");
         }
@@ -60,14 +60,14 @@ public class LoaderServiceImpl implements LoaderService {
         log.info("Total load weight estimated after loading: {} gramme(s)", weight + droneWeight);
 
         validateHistoryActivityData(loadRequestDto);
-        log.info("drone with Id #{} is travelling from  the origin: {} to the destination: {}", drone.getId(), loadRequestDto.getOriginLocation(), loadRequestDto.getDestinationLocation());
+        log.info("drone with SN #{} is travelling from the origin: {} to the destination: {}", drone.getSerialNumber(), loadRequestDto.getOriginLocation(), loadRequestDto.getDestinationLocation());
         medicationDtoList.forEach(dto -> {
             Medication medication = medicationService.findByCode(dto.getCode());//medicationMapper.toEntity(medicationMapper.toDto(dto));
             drone.getMedications().add(validate(medication));
             saveActivityHistory(drone, medication, loadRequestDto);
         });
 
-        log.info("The drone with ID {} are finished LOADING, final added weight is {} gramme(s)", drone.getId(), weight);
+        log.info("The drone with SN #{} are finished LOADING, final added weight is {} gramme(s)", drone.getSerialNumber(), weight);
         drone.setState(EStatus.LOADING);
         droneService.save(drone);
         return medicationService.getAllMedicationsByDrone(drone.getSerialNumber()).size();
@@ -93,7 +93,7 @@ public class LoaderServiceImpl implements LoaderService {
                         .startedAt(LocalDateTime.now())
                         .build()
         );
-        log.info("An activity History with ID {} is created for medication identified by {} in DELIVERING state", history.getId(), medication.getId());
+        log.info("An activity History with ID #{} is created for medication identified by #{} in DELIVERING state", history.getId(), medication.getCode());
     }
 
     private void validateHistoryActivityData(LoadRequestDto loadRequestDto) {

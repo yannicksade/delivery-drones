@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.musala.delivery.drones.entities.dto.SuccessMessage;
-import com.musala.delivery.drones.services.FileUploaderService;
 import com.musala.delivery.drones.exceptions.BusinessErrorException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,24 +29,26 @@ public class MedicationController {
 
     private final MedicationService medicationService;
 
-    private final FileUploaderService fileUploaderService;
-
     @GetMapping("details")
     private ResponseEntity<MedicationDto> getMedicationDetails(@Valid @RequestParam("code") String code) throws ResourceNotFoundException {
         return ResponseEntity.ok().body(medicationService.getMedicationByCode(code));
     }
 
-    @GetMapping("allMedicationsByDrone/{serialNumber}")
+    @GetMapping("byDrone/{serialNumber}/all")
     private ResponseEntity<List<MedicationDto>> getDroneMedications(@PathVariable("serialNumber") String droneId) {
         return ResponseEntity.ok().body(medicationService.getAllMedicationsByDrone(droneId));
     }
 
+    @GetMapping("list/all")
+    private ResponseEntity<List<MedicationDto>> getMedications(@Valid @RequestBody MedicationRequestDto request) {
+        return ResponseEntity.ok().body(medicationService.listAllMedications(request));
+    }
     @PostMapping("create")
     public ResponseEntity<MedicationDto> createMedication(@Valid @RequestBody MedicationRequestDto request) throws InvalidRequestException, MedicationAlreadyRegisteredException, BusinessErrorException {
         return ResponseEntity.ok().body(medicationService.createMedication(request));
     }
 
-    @PostMapping("image/{medicationCode}")
+    @PostMapping("{medicationCode}/update/image")
     public ResponseEntity<MedicationDto> updateImage(@PathVariable("medicationCode") String code, @RequestParam("file") MultipartFile multiPartFile) throws ResourceNotFoundException, InvalidRequestException {
         return ResponseEntity.ok().body(medicationService.updatedImage(code, multiPartFile));
     }

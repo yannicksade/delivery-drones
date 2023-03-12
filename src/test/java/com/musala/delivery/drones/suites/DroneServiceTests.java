@@ -30,10 +30,10 @@ public class DroneServiceTests {
     @Mock
     DroneMapper droneMapper;
 
-    @BeforeTest
-    public void init() {
+    //@BeforeTest
+    /*public void init() {
         MockitoAnnotations.openMocks(DroneServiceTests.class);
-    }
+    }*/
 
    /* @Test
     public void testFindById() {

@@ -31,36 +31,36 @@ public class LoadDeliveringJob {
                 drone -> {
                     HistoryDto activityHistory = activityHistoryService.getHistoriesByDrone(drone.getSerialNumber(), HistoryRequestDto.builder().historyState(EStatus.DELIVERING).build())
                             .stream().findAny().orElse(null);
-                    log.info("Activity found on Drone identified by ID {} in {} state", drone.getId(), drone.getState());
+                    log.info("Activity found on Drone identified by SN #{} in {} state", drone.getSerialNumber(), drone.getState());
                     if (activityHistory != null)
                         switch (drone.getState()) {
                             case LOADING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.LOADED);
-                                log.info("A drone with ID {} is in DELIVERING state", drone.getId());
+                                log.info("A drone with SN #{} is in DELIVERING state", drone.getSerialNumber());
                                 activityHistoryService.updateActivityState(activityHistory.getId(), EStatus.DELIVERING);
-                                log.info("Activity history identified By {} changed state from LOADED to DELIVERING", activityHistory.getId());
+                                log.info("Activity history identified By #{} changed state from LOADED to DELIVERING", activityHistory.getId());
                             }
                             case LOADED -> {
-                                log.info("A drone with ID {} is loaded", drone.getId());
+                                log.info("A drone with SN #{} is loaded", drone.getSerialNumber());
                                 droneService.updateDroneStateById(drone.getId(), EStatus.DELIVERING);
-                                log.info("A drone with ID {} changed state from LOADED to DELIVERING", drone.getId());
+                                log.info("A drone with SN {} changed state from LOADED to DELIVERING", drone.getSerialNumber());
                             }
                             case DELIVERING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.DELIVERED);
-                                log.info("A Drone with ID {} changed state to DELIVERED", drone.getId());
+                                log.info("A Drone with SN #{} changed state to DELIVERED", drone.getSerialNumber());
                                 activityHistoryService.updateActivityState(activityHistory.getId(), EStatus.DELIVERED);
-                                log.info("Activity history identified By {} changed status to DELIVERED ", activityHistory.getId());
+                                log.info("Activity history identified By #{} changed status to DELIVERED ", activityHistory.getId());
                             }
                             case DELIVERED -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.RETURNING);
-                                log.info("A drone with ID {} changed state from DELIVERED  to RETURNING", drone.getId());
+                                log.info("A drone with SN #{} changed state from DELIVERED  to RETURNING", drone.getSerialNumber());
                                 drone.setMedications(new HashSet<>());
                                 drone = droneService.save(drone);
-                                log.info("A drone with ID {} is discharged and mission completed", drone.getId());
+                                log.info("A drone with SN #{} is discharged and mission completed", drone.getSerialNumber());
                             }
                             case RETURNING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.IDLE);
-                                log.info("A drone with ID {} changed state from RETURNING to IDLE", drone.getId());
+                                log.info("A drone with SN #{} changed state from RETURNING to IDLE", drone.getSerialNumber());
                             }
                             default -> {
                             }

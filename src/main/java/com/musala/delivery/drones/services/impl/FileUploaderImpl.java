@@ -23,9 +23,8 @@ public class FileUploaderImpl implements FileUploaderService {
         String fileName = multipartFile.getOriginalFilename();
         String[] parts = fileName.split("\\.");
        int size = Arrays.asList(parts).size();
-        log.error("Loading file {} of extension {} and size {} ",  fileName, multipartFile.getName(),  multipartFile.getSize());
         String ext = parts[size - 1];
-        log.info("Loading file of extension {} " + ext);
+        log.error("Loading file {} of extension {} and size {} ",  fileName, ext.toUpperCase(),  multipartFile.getSize());
         fileName = fileName.replace("."  + ext, "") + '_' + generateFileName().get() + '.' + ext;
         String windowsRelocation = "D:\\lib\\files";
         String linuxReLocation = "/usr/local/lib/files";

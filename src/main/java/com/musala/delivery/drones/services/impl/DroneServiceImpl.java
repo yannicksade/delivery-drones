@@ -1,14 +1,20 @@
 package com.musala.delivery.drones.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.entities.dto.DroneDto;
 import com.musala.delivery.drones.entities.dto.DroneRequestDto;
 import com.musala.delivery.drones.exceptions.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -30,9 +36,12 @@ public class DroneServiceImpl implements DroneService {
 
     private final DroneMapper droneMapper;
 
+    @PersistenceContext
+    private final EntityManager entityManager;
+
     @Override
     public Drone findBySerialNumber(String serialNumber) throws ResourceNotFoundException {
-        return droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("No Drone details Found"));
+        return droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("No drone found for the serialNumber or any Key"));
     }
 
     @Override
@@ -45,6 +54,22 @@ public class DroneServiceImpl implements DroneService {
         return droneRepository.findAll();
     }
 
+    private CriteriaQuery<Drone> getCriteria(DroneRequestDto requestDto) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Drone> query = cb.createQuery(Drone.class);
+        List<Predicate> predicates = new ArrayList<>();
+        Root<Drone> drone = query.from(Drone.class);
+        if (requestDto.getModel() != null)
+            predicates.add(cb.equal(drone.get("model"), requestDto.getModel()));
+        if (requestDto.getSerialNumber() != null)
+            predicates.add(cb.like(drone.get("serialNumber"), requestDto.getSerialNumber()));
+        if (requestDto.getWeightLimit() != null)
+            predicates.add(cb.equal(drone.get("weightLimit"), requestDto.getWeightLimit()));
+        int nb = predicates.size();
+        return query.select(drone)
+                .where(cb.and(predicates.toArray(new Predicate[nb])));
+    }
+
     @Override
     public DroneDto registerDrone(DroneRequestDto request)
             throws InvalidRequestException, DroneAlreadyRegisteredException, BusinessErrorException {
@@ -54,7 +79,7 @@ public class DroneServiceImpl implements DroneService {
             throw new DroneAlreadyRegisteredException("the provided drone item is already registered");
         }
         DroneDto droneDto = validateDrone(request);
-        log.info("A drone with  serial number {} and model {} is saving ", request.getSerialNumber(), request.getModel());
+        log.info("A drone with  serial number #{} and model {} is saving ", request.getSerialNumber(), request.getModel());
         try {
             droneDto = droneMapper.toDto(droneRepository.save(
                     Drone.builder()
@@ -81,10 +106,6 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public DroneDto validateDrone(DroneRequestDto request) throws InvalidRequestException {
-
-        if (request.equals(null)) {
-            throw new InvalidRequestException("Invalid data");
-        }
         if (request.getModel().name().isBlank()) {
             throw new InvalidRequestException("Drone Model is required");
         }
@@ -95,8 +116,6 @@ public class DroneServiceImpl implements DroneService {
             throw new InvalidRequestException(
                     "A drone total weight must be greater than 0 and lesser than 500 grammes");
         }
-        Optional<Drone> drone = droneRepository.findByModelAndSerialNumber(request.getModel(), request.getSerialNumber());
-
         return droneMapper.toDto(droneMapper.toEntity(request));
     }
 
@@ -114,7 +133,7 @@ public class DroneServiceImpl implements DroneService {
         } catch (DataAccessException ex) {
             throw new BusinessErrorException("Drone identified by serialNumber - " + ex.getMostSpecificCause().getMessage());
         }
-        log.info("A drone with serial number {} is updated...", drone.getSerialNumber());
+        log.info("A drone with serial number #{} is updated...", drone.getSerialNumber());
         return droneMapper.toDto(drone);
     }
 
@@ -126,10 +145,16 @@ public class DroneServiceImpl implements DroneService {
                 throw new DroneAlreadyBusyException("Drone is Busy cannot be deleted ");
 
             droneRepository.delete(droneRepository.findBySerialNumber(serialNumber).orElseThrow(() -> new ResourceNotFoundException("Drone with serial Number not Exists")));
-            log.info("A drone with serial number {} is deleted...", serialNumber);
+            log.info("A drone with serial number #{} is deleted...", serialNumber);
         } catch (DataAccessException ex) {
             throw new BusinessErrorException("Drone identified by serialNumber - " + ex.getMostSpecificCause().getMessage());
         }
+    }
+
+    @Override
+    public List<DroneDto> listAllDrones(DroneRequestDto request) {
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(request)).getResultList()).orElse(new ArrayList<>())
+                .stream().map(droneMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
@@ -143,9 +168,9 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public float checkDroneBatteryLevelById(long id) throws ResourceNotFoundException {
-        return droneRepository.findById(id).map(Drone::getBatteryLevel)
-                .orElseThrow(() -> new ResourceNotFoundException("No drone found with the ID number" + id));
+    public float checkDroneBatteryLevelById(String serialNumber) throws ResourceNotFoundException {
+        return droneRepository.findBySerialNumber(serialNumber).map(Drone::getBatteryLevel)
+                .orElseThrow(() -> new ResourceNotFoundException("No drone found with the SN : " + serialNumber));
     }
 
     @Override

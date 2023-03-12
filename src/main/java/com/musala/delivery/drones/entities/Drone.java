@@ -25,12 +25,12 @@ import java.util.Set;
 @EqualsAndHashCode
 @Validated
 @Table(name = "MS_DL_DRONE", uniqueConstraints = @UniqueConstraint(columnNames = "SERIAL_NUMBER"))
-@SequenceGenerator(name = "SeqDrone", sequenceName = "SeqDrone", initialValue = 1, allocationSize = 1)
+//@SequenceGenerator(name = "SeqDrone", sequenceName = "SeqDrone", initialValue = 1, allocationSize = 1)
 public class Drone {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SeqDrone")
+    //@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SeqDrone")
     private Long id;
 
     @Column(name = "MODEL")

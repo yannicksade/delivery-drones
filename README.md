@@ -68,7 +68,8 @@ While implementing your solution **please take care of the following requirement
   RETURNING,IDLE``` to simulate finishing the drone trip
 
 ## API Docs 
- - SWAGGER URL: http://127.0.0.1:8050/api/v1/swagger-ui/index.html#
+ - Swagger URL: http://127.0.0.1:8050/api/v1/swagger-ui/index.html#
+ - Postman Collection
 #### RUN
 ### 1- Java -jar drones.jar # run IN-MEMORY database
 ### 2.1- pull dock image from registry

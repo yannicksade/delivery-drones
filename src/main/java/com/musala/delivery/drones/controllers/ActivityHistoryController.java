@@ -20,7 +20,7 @@ public class ActivityHistoryController {
 
     private final ActivityHistoryService historyService;
 
-    @GetMapping("details/{id}")
+    @GetMapping("{id}/details")
     private ResponseEntity<HistoryDto> getDetails(@PathVariable("id") long id) throws ResourceNotFoundException {
         return ResponseEntity.ok().body(historyService.getHistoryDetails(id));
     }
@@ -30,12 +30,12 @@ public class ActivityHistoryController {
         return ResponseEntity.ok().body(historyService.getHistories(request));
     }
 
-    @GetMapping("drone/all/{serialNumber}")
+    @GetMapping("drone/{serialNumber}/all")
     private ResponseEntity<List<HistoryDto>> searchAllByDrone(@Valid @RequestBody HistoryRequestDto request, @Valid  @PathVariable("serialNumber") String serialNumber) throws HttpMessageNotReadableException {
         return ResponseEntity.ok().body(historyService.getHistoriesByDrone(serialNumber, request));
     }
 
-    @GetMapping(value = "medication/all/{code}")
+    @GetMapping(value = "medication/{code}/all")
     private ResponseEntity<List<HistoryDto>> searchAllByMedication(@Valid @RequestBody HistoryRequestDto request, @PathVariable("code") String code) throws HttpMessageNotReadableException {
         return ResponseEntity.ok().body(historyService.getHistoriesByMedication(code, request));
     }
