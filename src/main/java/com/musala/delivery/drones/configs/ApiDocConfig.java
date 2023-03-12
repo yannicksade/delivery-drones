@@ -12,7 +12,7 @@ public class ApiDocConfig {
 
 	@Bean
 	public OpenAPI baseOpenApi() {
-		return new OpenAPI().info(new Info().title("Delivering Drones docs").version("1.0.0")
-				.description("Loading drones for delivering medication"));
+		return new OpenAPI().info(new Info().title("Delivering drones docs").version("1.0.0")
+				.description("Musala drones App for delivering medication"));
 	}
 }

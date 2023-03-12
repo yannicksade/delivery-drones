@@ -1,14 +1,14 @@
 package com.musala.delivery.drones.controllers;
 
 
-import com.musala.delivery.drones.dto.DroneDto;
-import com.musala.delivery.drones.dto.DroneRequestDto;
-import com.musala.delivery.drones.dto.HistoryDto;
-import com.musala.delivery.drones.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.services.ActivityHistoryService;
+import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,20 +20,23 @@ public class ActivityHistoryController {
 
     private final ActivityHistoryService historyService;
 
-    @GetMapping("details/{id}")
-    private ResponseEntity<HistoryDto> getDetails(@PathVariable("id") long id) {
+    @GetMapping("{id}/details")
+    private ResponseEntity<HistoryDto> getDetails(@PathVariable("id") long id) throws ResourceNotFoundException {
         return ResponseEntity.ok().body(historyService.getHistoryDetails(id));
     }
+
     @GetMapping("all")
     private ResponseEntity<List<HistoryDto>> searchAll(@Valid @RequestBody HistoryRequestDto request) {
         return ResponseEntity.ok().body(historyService.getHistories(request));
     }
-    @GetMapping("drone/all/{id}")
-    private ResponseEntity<List<HistoryDto>> searchAllByDrone(@Valid @RequestBody HistoryRequestDto request, @PathVariable("id") long id) {
-        return ResponseEntity.ok().body(historyService.getHistoriesByDrone(id, request));
+
+    @GetMapping("drone/{serialNumber}/all")
+    private ResponseEntity<List<HistoryDto>> searchAllByDrone(@Valid @RequestBody HistoryRequestDto request, @Valid  @PathVariable("serialNumber") String serialNumber) throws HttpMessageNotReadableException {
+        return ResponseEntity.ok().body(historyService.getHistoriesByDrone(serialNumber, request));
     }
-    @GetMapping("medication/all/{id}")
-    private ResponseEntity<List<HistoryDto>> searchAllByMedication(@Valid @RequestBody HistoryRequestDto request, @PathVariable("id") long id) {
-        return ResponseEntity.ok().body(historyService.getHistoriesByMedication(id, request));
+
+    @GetMapping(value = "medication/{code}/all")
+    private ResponseEntity<List<HistoryDto>> searchAllByMedication(@Valid @RequestBody HistoryRequestDto request, @PathVariable("code") String code) throws HttpMessageNotReadableException {
+        return ResponseEntity.ok().body(historyService.getHistoriesByMedication(code, request));
     }
 }

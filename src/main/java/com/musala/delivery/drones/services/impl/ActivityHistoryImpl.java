@@ -1,10 +1,8 @@
 package com.musala.delivery.drones.services.impl;
 
-import com.musala.delivery.drones.dto.HistoryDto;
-import com.musala.delivery.drones.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
-import com.musala.delivery.drones.entities.Drone;
-import com.musala.delivery.drones.entities.Medication;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
 import com.musala.delivery.drones.mappers.HistoryMapper;
@@ -17,11 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,18 +35,19 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
 
     @Override
     public List<HistoryDto> getHistories(HistoryRequestDto requestDto) {
-        return  entityManager.createQuery(getCriteria(requestDto, null, -1)).getResultList()
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, null, null)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
-    }
-    @Override
-    public List<HistoryDto> getHistoriesByDrone(long droneID, HistoryRequestDto requestDto) {
-        return  entityManager.createQuery(getCriteria(requestDto, "drone", droneID)).getResultList()
-        .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<HistoryDto> getHistoriesByMedication(long medicationID, HistoryRequestDto requestDto) {
-        return  entityManager.createQuery(getCriteria(requestDto, "medication", medicationID)).getResultList()
+    public List<HistoryDto> getHistoriesByDrone(String serialNumber, HistoryRequestDto requestDto) {
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "drone", serialNumber)).getResultList()).orElse(new ArrayList<>())
+                .stream().map(historyMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<HistoryDto> getHistoriesByMedication(String code, HistoryRequestDto requestDto) {
+        return Optional.ofNullable(entityManager.createQuery(getCriteria(requestDto, "medication", code)).getResultList()).orElse(new ArrayList<>())
                 .stream().map(historyMapper::toDto).collect(Collectors.toList());
     }
 
@@ -64,37 +62,37 @@ public class ActivityHistoryImpl implements ActivityHistoryService {
     }
 
     @Override
-    public HistoryDto getHistoryDetails(long id) {
+    public HistoryDto getHistoryDetails(long id) throws ResourceNotFoundException{
         return historyMapper.toDto(historyRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("no history details with that ID")));
     }
 
-    private CriteriaQuery<ActivityHistory> getCriteria(HistoryRequestDto requestDto, String field, long id) {
+    private CriteriaQuery<ActivityHistory> getCriteria(HistoryRequestDto requestDto, String field, String key) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ActivityHistory> query = cb.createQuery(ActivityHistory.class);
         List<Predicate> predicates = new ArrayList<>();
         Root<ActivityHistory> history = query.from(ActivityHistory.class);
-        if(field == "drone") {
-            Join<Object, Object> drone = history.join(Drone.class.getName(), JoinType.INNER);
-            predicates.add(cb.equal(drone.get("id"), id));
+        if ("drone".equals(field)) {
+            Join<Object, Object> root = history.join("drone", JoinType.INNER);
+            predicates.add(cb.equal(root.get("serialNumber"), key));
         }
-        if(field == "medication") {
-            Join<Object, Object> drone = history.join(Medication.class.getName(), JoinType.INNER);
-            predicates.add(cb.equal(drone.get("id"), id));
+        if ("medication".equals(field)) {
+            Join<Object, Object> drone = history.join("medication", JoinType.INNER);
+            predicates.add(cb.equal(drone.get("code"), key));
         }
-        String  end, start = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
-        end =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-        if(requestDto.getStartedAt() != null)
-            start = requestDto.getStartedAt().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));;
+        LocalDateTime start = LocalDateTime.now().minusDays(1);
+        LocalDateTime end = LocalDateTime.now();
+        if (requestDto.getStartedAt() != null)
+            start = requestDto.getStartedAt();
         predicates.add(cb.between(history.get("startedAt"), start, end));
-        if(requestDto.getHistoryState() != null)
+        if (requestDto.getHistoryState() != null)
             predicates.add(cb.equal(history.get("historyState"), requestDto.getHistoryState()));
-        if(requestDto.getDestinationLocation() != null)
+        if (requestDto.getDestinationLocation() != null)
             predicates.add(cb.like(history.get("destinationLocation"), requestDto.getDestinationLocation()));
-        if(requestDto.getOriginLocation() != null)
+        if (requestDto.getOriginLocation() != null)
             predicates.add(cb.like(history.get("originLocation"), requestDto.getOriginLocation()));
-
+        int nb = predicates.size();
         return query.select(history)
-                .where(cb.and(predicates.toArray(new Predicate[predicates.size()])));
+                .where(cb.and(predicates.toArray(new Predicate[nb])));
     }
 
 }

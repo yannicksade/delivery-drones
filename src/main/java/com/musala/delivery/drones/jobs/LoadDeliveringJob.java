@@ -1,7 +1,7 @@
 package com.musala.delivery.drones.jobs;
 
-import com.musala.delivery.drones.dto.HistoryDto;
-import com.musala.delivery.drones.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.Drone;
 import com.musala.delivery.drones.enumerations.EStatus;
 import com.musala.delivery.drones.services.ActivityHistoryService;
@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -23,40 +25,42 @@ public class LoadDeliveringJob {
     @Scheduled(cron = "0 */2 * ? * *")
     public void getAllDeliveringDrones() {
         List<Drone> drones = droneService.getWorkingDrones();
-        log.info("#{} drone(s) currently working", drones.size());
+        log.info("{} drone(s) currently found in working state", drones.size());
 
         drones.stream().forEach(
                 drone -> {
-                    HistoryDto activityHistory = activityHistoryService.getHistoriesByDrone(drone.getId(), HistoryRequestDto.builder().historyState(EStatus.DELIVERING).build())
+                    HistoryDto activityHistory = activityHistoryService.getHistoriesByDrone(drone.getSerialNumber(), HistoryRequestDto.builder().historyState(EStatus.DELIVERING).build())
                             .stream().findAny().orElse(null);
-                    log.info("Activity history found for drone id {} in DELIVERING state", drone.getId());
+                    log.info("Activity found on Drone identified by SN #{} in {} state", drone.getSerialNumber(), drone.getState());
                     if (activityHistory != null)
                         switch (drone.getState()) {
                             case LOADING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.LOADED);
-                                log.info("Drone with Id {} is DELIVERING", drone.getId());
+                                log.info("A drone with SN #{} is in DELIVERING state", drone.getSerialNumber());
                                 activityHistoryService.updateActivityState(activityHistory.getId(), EStatus.DELIVERING);
-                                log.info("Activity history identified By {} changed status from LOADED to DELIVERING", activityHistory.getId());
+                                log.info("Activity history identified By #{} changed state from LOADED to DELIVERING", activityHistory.getId());
                             }
                             case LOADED -> {
+                                log.info("A drone with SN #{} is loaded", drone.getSerialNumber());
                                 droneService.updateDroneStateById(drone.getId(), EStatus.DELIVERING);
-                                log.info("Drone with id {} changed state from LOADED to DELIVERING", drone.getId());
+                                log.info("A drone with SN {} changed state from LOADED to DELIVERING", drone.getSerialNumber());
                             }
                             case DELIVERING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.DELIVERED);
-                                log.info("Drone with id {} changed state from DELIVERING to DELIVERED", drone.getId());
+                                log.info("A Drone with SN #{} changed state to DELIVERED", drone.getSerialNumber());
                                 activityHistoryService.updateActivityState(activityHistory.getId(), EStatus.DELIVERED);
-                                log.info("Activity history identified By {} changed status to DELIVERED ", activityHistory.getId());
+                                log.info("Activity history identified By #{} changed status to DELIVERED ", activityHistory.getId());
                             }
                             case DELIVERED -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.RETURNING);
-                                log.info("drone with id {} status updated from DELIVERED to RETURNING", drone.getId());
-                                drone.setMedications(null);
-                                droneService.save(drone);
+                                log.info("A drone with SN #{} changed state from DELIVERED  to RETURNING", drone.getSerialNumber());
+                                drone.setMedications(new HashSet<>());
+                                drone = droneService.save(drone);
+                                log.info("A drone with SN #{} is discharged and mission completed", drone.getSerialNumber());
                             }
                             case RETURNING -> {
                                 droneService.updateDroneStateById(drone.getId(), EStatus.IDLE);
-                                log.info("drone with id {} status updated from RETURNING to IDLE", drone.getId());
+                                log.info("A drone with SN #{} changed state from RETURNING to IDLE", drone.getSerialNumber());
                             }
                             default -> {
                             }
