@@ -1,4 +1,4 @@
-package com.musala.delivery.drones.dto;
+package com.musala.delivery.drones.entities.dto;
 
 import com.musala.delivery.drones.enumerations.EStatus;
 import lombok.Builder;
@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-public class HistoryRequestDto {
+public class HistoryDto {
+    private long id;
     private EStatus historyState;
     private String originLocation;
     private String destinationLocation;

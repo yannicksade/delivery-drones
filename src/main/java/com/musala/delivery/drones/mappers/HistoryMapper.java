@@ -1,7 +1,7 @@
 package com.musala.delivery.drones.mappers;
 
-import com.musala.delivery.drones.dto.HistoryDto;
-import com.musala.delivery.drones.dto.HistoryRequestDto;
+import com.musala.delivery.drones.entities.dto.HistoryDto;
+import com.musala.delivery.drones.entities.dto.HistoryRequestDto;
 import com.musala.delivery.drones.entities.ActivityHistory;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;

@@ -32,4 +32,6 @@ public interface DroneRepository extends JpaRepository<Drone, Long> {
 	@Query("FROM Drone dn WHERE dn.state <> :state")
     List<Drone> findWorkingDrones(EStatus state);
 
+	@Query("SELECT COUNT (d) FROM Drone d WHERE d.serialNumber = :s AND d.state = :idle")
+	Integer checkState(String s, EStatus idle);
 }

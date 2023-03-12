@@ -12,10 +12,10 @@ public enum EModel {
 	@Override
 	public String toString() {
 		return switch (this) {
-		case LIGHTWEIGHT -> "Lightweight";
-		case MIDDLEWEIGHT -> "Middleweight";
-		case CRUISERWEIGHT -> "Cruiserweight";
-		case HEAVYWEIGHT -> "Heavyweight";
+		case LIGHTWEIGHT -> "LIGHTWEIGHT";
+		case MIDDLEWEIGHT -> "MIDDLEWEIGHT";
+		case CRUISERWEIGHT -> "CRUISERWEIGHT";
+		case HEAVYWEIGHT -> "HEAVYWEIGHT";
 		default -> throw new IllegalStateException("Invalid model");
 		};
 	}

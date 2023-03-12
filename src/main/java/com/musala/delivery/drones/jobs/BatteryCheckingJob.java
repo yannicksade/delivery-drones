@@ -21,6 +21,6 @@ public class BatteryCheckingJob {
         if (drones.isEmpty())
             log.info("no drones registered for battery checking");
         else
-            drones.stream().forEach(drone ->  log.info("The battery level of the drone #{} is {}%", drone.getId(), drone.getBatteryLevel()));
+            drones.stream().forEach(drone ->  log.info("The battery level of the drone #{} is {}%", drone.getSerialNumber(), drone.getBatteryLevel()));
     }
 }

@@ -3,33 +3,37 @@ package com.musala.delivery.drones.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.musala.delivery.drones.dto.*;
 import com.musala.delivery.drones.entities.Drone;
+import com.musala.delivery.drones.entities.dto.DroneDto;
+import com.musala.delivery.drones.entities.dto.DroneRequestDto;
 import com.musala.delivery.drones.enumerations.EStatus;
-import com.musala.delivery.drones.exceptions.DroneAlreadyRegisteredException;
-import com.musala.delivery.drones.exceptions.InvalidRequestException;
-import com.musala.delivery.drones.exceptions.ResourceNotFoundException;
+import com.musala.delivery.drones.exceptions.*;
 
 public interface DroneService {
 
-    Optional<Drone> findById(long id);
+    Drone findBySerialNumber(String serialNumber);
+
     List<DroneDto> getAllAvailableDrones();
+
     List<Drone> findAllDrones();
-    DroneDto registerDrone(DroneRequestDto droneRequest) throws InvalidRequestException, DroneAlreadyRegisteredException;
+
+    DroneDto registerDrone(DroneRequestDto droneRequest) throws InvalidRequestException, DroneAlreadyRegisteredException, BusinessErrorException;
 
     DroneDto getDroneBySerialNumber(String serialNumber) throws ResourceNotFoundException;
 
     DroneDto validateDrone(DroneRequestDto droneRequest) throws InvalidRequestException;
 
-    float checkDroneBatteryLevelById(long id) throws ResourceNotFoundException;
+    float checkDroneBatteryLevelById(String serialNumber) throws ResourceNotFoundException;
 
     void updateDroneStateById(long id, EStatus state);
 
-    Double checkDroneLoad(Optional<Drone> drone);
-
-    DroneDto updateDrone(DroneRequestDto droneRequest);
+    DroneDto updateDrone(DroneRequestDto droneRequest) throws DroneAlreadyBusyException, ResourceNotFoundException, BusinessErrorException;
 
     Drone save(Drone drone);
 
     List<Drone> getWorkingDrones();
+
+    void removeDrone(String serialNumber) throws BusinessErrorException;
+
+    List<DroneDto> listAllDrones(DroneRequestDto request);
 }
